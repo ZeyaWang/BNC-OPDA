@@ -1,0 +1,64 @@
+#import pandas
+import pandas as pd
+import os,sys
+from collections import defaultdict
+import numpy as np
+
+dm1 = ['Art', 'Clipart', 'Product', 'RealWorld']
+dm2 = ['amazon', 'dslr', 'webcam']
+dm3 = ['train', 'validation']
+
+myd = defaultdict(list)
+#fd = 'res_pre'
+#fd = 'result2'
+fd = '.'
+#fd=  'result3_w_closs_w_mloss_wt_fcopt'
+print('===========', fd, '===========')
+for f in os.listdir(fd):
+    if f.endswith('.csv'):
+        #print(f)
+        ff = os.path.join(fd, f)
+        res = pd.read_csv(ff, header=None).iloc[0].tolist()
+        f2 = f.replace('Real_World', 'RealWorld')
+        #print(f2)
+        _, src, tar, lam, interval, lam2, lr= f2[:-4].split('_')
+        # _, src, tar, lam, interval, lam2, = f2[:-4].split('_')
+        hos, acc_test, nmi, k_acc, uk_nmi = res[:5]
+        #if lam not in ['0.1','1.0'] and interval != '10':
+        #myd[(lam, lam2, interval)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
+        myd[(lam, lam2, interval, lr)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
+
+for k in myd:
+    myd[k].sort()
+#print(myd)
+
+np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
+for k in myd:
+    dd = pd.DataFrame(myd[k])
+    nc = dd.select_dtypes(include='number').mean()
+    nc = pd.DataFrame(nc).T
+    ddd = pd.concat([dd, nc], ignore_index=True)
+    ddd = ddd.fillna('')
+    #fn = "sum" + "_".join(map(str, k)) + ".csv"
+    #print(k, ddd)  
+    dd1 = ddd[ddd[0].isin(dm1)]
+    dd2 = ddd[ddd[0].isin(dm2)]
+    dd3 = ddd[ddd[0].isin(dm3)]
+    dd1['task'] = dd1[0].astype(str) + '_' +  dd1[1].astype(str)
+    dd1 = dd1.drop(columns=[0, 1])
+    dd2['task'] = dd2[0].astype(str) + '_' +  dd2[1].astype(str)
+    dd2 = dd2.drop(columns=[0, 1])
+    dd3['task'] = dd3[0].astype(str) + '_' +  dd3[1].astype(str)
+    dd3 = dd3.drop(columns=[0, 1])
+    mean1 = dd1.drop(columns=['task']).mean()
+    mean1['task'] = 'Average'
+    dd1.loc['mean'] = mean1
+    mean2 = dd2.drop(columns=['task']).mean()
+    mean2['task'] = 'Average'
+    dd2.loc['mean'] = mean2
+    ddd = pd.concat([dd1, dd2, dd3], ignore_index=True)
+    ddd = ddd[['task',2,3,4,5,6]]
+    ddd = ddd.rename(columns={2: 'hos',3: 'acc',4: 'nmi',5: 'known acc',6: 'unknown nmi'})
+    print(k, ddd)  
+
+
