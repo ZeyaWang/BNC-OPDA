@@ -53,12 +53,12 @@ class OptSets():
             optim.SGD(totalNet.feature_extractor.parameters(), lr=lr / 10.0,
                       weight_decay=args.weight_decay, momentum=args.momentum, nesterov=True), scheduler)
 
-        # self.optimizer_linear = OptimWithSheduler(
-        #     optim.SGD(list(totalNet.classifier.parameters()) + list(totalNet.bottle_neck.parameters()), lr=lr, weight_decay=args.weight_decay,
-        #               momentum=args.momentum, nesterov=True),
-        #     scheduler)
-
         self.optimizer_linear = OptimWithSheduler(
+            optim.SGD(totalNet.classifier.parameters(), lr=lr, weight_decay=args.weight_decay,
+                      momentum=args.momentum, nesterov=True),
+            scheduler)
+
+        self.optimizer_bottleneck = OptimWithSheduler(
             optim.SGD(totalNet.bottle_neck.parameters(), lr=lr, weight_decay=args.weight_decay,
                       momentum=args.momentum, nesterov=True),
             scheduler)
@@ -75,7 +75,7 @@ def detect(totalNet, thresh=0.5):
             label_list.append(label.numpy())
     #print(labels)
     feature = np.concatenate(feature_list, axis=0)
-    ys = np.concatenate(label_list, axis=0)
+    #ys = np.concatenate(label_list, axis=0)
     #plotpy2(feature, ys)
     init_centers = totalNet.classifier.fc.weight.detach().cpu().numpy()
     #print('===========', init_centers.shape)
@@ -86,22 +86,25 @@ def detect(totalNet, thresh=0.5):
     cos_max = cos.max(1)
     cos_argmax = cos.argmax(1)
     sim_bmm_model = sim_bmm(norm=True)
-    sim_bmm_model.bmm_fit(cos_max[cos_argmax < num_src_cls])
+    sim_bmm_model.bmm_fit(cos_max)
+    #sim_bmm_model.bmm_fit(cos_max[cos_argmax < num_src_cls])
     w_k_posterior = np.zeros(cos_max.shape)
-    w_k_posterior_tmp, _ = sim_bmm_model.get_posterior(cos_max[cos_argmax < num_src_cls])
-    w_k_posterior[cos_argmax < num_src_cls] = w_k_posterior_tmp
+    #w_k_posterior_tmp, _ = sim_bmm_model.get_posterior(cos_max[cos_argmax < num_src_cls])
+    # w_k_posterior_tmp, _ = sim_bmm_model.get_posterior(cos_max)
+    # w_k_posterior[cos_argmax < num_src_cls] = w_k_posterior_tmp
+    w_k_posterior, _ = sim_bmm_model.get_posterior(cos_max)
     #thresh = 0.5
     label_ = np.copy(cos_argmax)
     label_[w_k_posterior <= thresh] = 100
     return label_, cos_max, w_k_posterior, cos_argmax, feature, init_centers, sim_bmm_model
 
 
-def clustering(ClustNet, predict_src, test_dl, logdir):
-    tgt_member, tgt_predict, embedding = merge_cluster(ClustNet, Cluster, test_dl, output_device, logdir,
-                                                               predict_src, plot=False, num_src_cls=num_src_cls)
-    nmi_v, k_acc, uk_nmi, rec, prec = merge_perf_v2(tgt_member, tgt_predict, ncls=num_src_cls)
+
+def clustering(tgt_embedding, tgt_member, predict_src):
+    tgt_predict = merge_cluster(Cluster, tgt_embedding, tgt_member, predict_src, plot=False, num_src_cls=num_src_cls)
+    nmi_v, k_acc, uk_nmi, rec, prec = merge_perf(tgt_member, tgt_predict, ncls=num_src_cls)
     metrics = {'nmi': nmi_v.item(), 'k_acc': k_acc.item(), 'uk_nmi': uk_nmi.item(), 'rec': rec.item(), 'prec': prec.item()}
-    return tgt_member, tgt_predict, embedding, metrics
+    return tgt_predict, metrics
 
 def generate_memory(tgt_predict, embedding):
     tgt_predict_post, tgt_match = post_match(tgt_predict)
@@ -133,7 +136,7 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
             fea_bank[indx] = output_norm.detach().clone().cpu()
             score_bank[indx] = outputs.detach().clone()
             #print(indx)
-        torch.set_printoptions(threshold=torch.inf)
+        #torch.set_printoptions(threshold=torch.inf)
 
 
     ClustNet.train()
@@ -174,8 +177,9 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
             mloss_total += mloss.item()
             loss_total += loss.item()
             with OptimizerManager(
-                    #[optSets.optimizer_extractor]): #, optSets.optimizer_linear]):
-                    [optSets.optimizer_extractor, optSets.optimizer_linear]):
+                    #[optSets.optimizer_extractor]):
+                    #[optSets.optimizer_extractor, optSets.optimizer_bottleneck, optSets.optimizer_classifier]):
+                    [optSets.optimizer_extractor, optSets.optimizer_bottleneck]):
                 loss.backward()
             global_step += 1
         tqdm.write(f'EPOCH {epoch_step:03d}: args.interval {t:03d}, closs={closs_total:.4f}, mloss={mloss_total:.4f}, loss={loss_total:.4f}')
@@ -218,21 +222,22 @@ else:
 for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
     d_result = {}
     dt = {}
-    #for t in [0.1, 0.2, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9]:
-    for t in threshs:
+    for it, t in enumerate(threshs):
         predict_y, cos_max, w_k_posterior, arg_y, feature, init_centers, sim_bmm_model = detect(totalNet, thresh=t)
         if (len(predict_y[predict_y < 100]) == 0) or (len(predict_y[predict_y == 100]) == 0):
             continue
-        tgt_member, tgt_predict, embedding, metrics = clustering(totalNet, predict_y, target_test_dl, log_dir)
-        sil = silhouette_score(embedding, tgt_predict)
-        d_result[sil] = (t, tgt_member, tgt_predict, embedding, metrics)
+        if it == 0:
+            tgt_embedding, tgt_member = gen_cluster_input(totalNet, target_test_dl, output_device)
+        tgt_predict, metrics = clustering(tgt_embedding, tgt_member, predict_y)
+
+        sil = silhouette_score(tgt_embedding, tgt_predict)
+        d_result[sil] = (t, tgt_predict, metrics)
         dt[t] = sil
     max_sil = max(d_result.keys())
-    t, tgt_member, tgt_predict, embedding, metrics = d_result[max_sil]
-    print('epoch_id {}:; thresh: {}; silhouette: {}'.format(epoch_id, t, dt))
+    t, tgt_predict, metrics = d_result[max_sil]
+    print('epoch_id {}:; best thresh: {}; silhouette scores: {}'.format(epoch_id, t, dt))
 
-
-    memory, tgt_predict_post, tgt_match = generate_memory(tgt_predict, embedding)
+    memory, tgt_predict_post, tgt_match = generate_memory(tgt_predict, tgt_embedding)
     target_train_ds.labels = list(zip([i for i in range(len(target_train_ds.datas))], tgt_predict_post))
     target_train_dl = DataLoader(dataset=target_train_ds, batch_size=args.batch_size, shuffle=True,
                                  num_workers=data_workers, drop_last=True)

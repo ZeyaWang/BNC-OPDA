@@ -29,7 +29,6 @@ parser.add_argument('--bottle_neck_dim', type=int, default=256, help='bottle_nec
 parser.add_argument('--base_model', type=str, default='resnet50', help='resnet50, vgg16')
 
 ## training parameters
-parser.add_argument('--warmup_step', type=int, default=20000, help='warm up steps')
 parser.add_argument('--lr', type=float, default=0.01) # previous training based on lr*lr_scale
 parser.add_argument('--weight_decay', type=float, default=0.001)
 parser.add_argument('--momentum', type=float, default=0.9)

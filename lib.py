@@ -33,38 +33,38 @@ def report(predict_id, label, source_classes):
     return counters, unknown_test_truth, unknown_test_pred, acc_tests
 
 
-class LogUpdater():
-    def __init__(self):
-        self.tgt_member_all, self.tgt_member_new_all, self.accs, self.unknown_test_truths, self.unknown_test_preds = [], [], [], [], []
-        self.counters_all1, self.accs1, self.unknown_test_truths1, self.unknown_test_preds1 = [], [], [], []
-        self.dp_preds_all1, self.dp_preds_all2, self.tgt_member_new2_all, self.counters_all = [], [], [], []
-        self.tgt_member_post_all, self.predict_idl_all, self.filter_out_idx_all = [], [], []
+# class LogUpdater():
+#     def __init__(self):
+#         self.tgt_member_all, self.tgt_member_new_all, self.accs, self.unknown_test_truths, self.unknown_test_preds = [], [], [], [], []
+#         self.counters_all1, self.accs1, self.unknown_test_truths1, self.unknown_test_preds1 = [], [], [], []
+#         self.dp_preds_all1, self.dp_preds_all2, self.tgt_member_new2_all, self.counters_all = [], [], [], []
+#         self.tgt_member_post_all, self.predict_idl_all, self.filter_out_idx_all = [], [], []
 
-    def update(self, unknown_test_truth=None, unknown_test_pred=None, unknown_test_truth1=None, unknown_test_pred1=None,
-               counters=None, counters1=None, preds=None, tgt_member=None,
-               tgt_member_post=None, predict_idl=None, filter_out_idx=None,
-               tgt_member_new=None, acc_tests=None, acc_tests1=None):
-        self.unknown_test_truths.append(unknown_test_truth)
-        self.unknown_test_preds.append(unknown_test_pred)
-        self.counters_all.append(counters)
-        self.counters_all1.append(counters1)
-        self.dp_preds_all1.append(preds)
-        self.tgt_member_all.append(tgt_member)
-        self.tgt_member_new_all.append(tgt_member_new)
-        self.tgt_member_post_all.append(tgt_member_post)
-        self.predict_idl_all.append(predict_idl)
-        self.filter_out_idx_all.append(filter_out_idx)
-        self.accs.append(acc_tests)
-        self.accs1.append(acc_tests1)
-        self.unknown_test_truths1.append(unknown_test_truth1)
-        self.unknown_test_preds1.append(unknown_test_pred1)
+#     def update(self, unknown_test_truth=None, unknown_test_pred=None, unknown_test_truth1=None, unknown_test_pred1=None,
+#                counters=None, counters1=None, preds=None, tgt_member=None,
+#                tgt_member_post=None, predict_idl=None, filter_out_idx=None,
+#                tgt_member_new=None, acc_tests=None, acc_tests1=None):
+#         self.unknown_test_truths.append(unknown_test_truth)
+#         self.unknown_test_preds.append(unknown_test_pred)
+#         self.counters_all.append(counters)
+#         self.counters_all1.append(counters1)
+#         self.dp_preds_all1.append(preds)
+#         self.tgt_member_all.append(tgt_member)
+#         self.tgt_member_new_all.append(tgt_member_new)
+#         self.tgt_member_post_all.append(tgt_member_post)
+#         self.predict_idl_all.append(predict_idl)
+#         self.filter_out_idx_all.append(filter_out_idx)
+#         self.accs.append(acc_tests)
+#         self.accs1.append(acc_tests1)
+#         self.unknown_test_truths1.append(unknown_test_truth1)
+#         self.unknown_test_preds1.append(unknown_test_pred1)
 
-    def save(self, log_dir, args):
-        with open(os.path.join(log_dir, 'tgt.pkl'), 'wb') as f:
-            pickle.dump([self.tgt_member_all, self.tgt_member_new_all, self.dp_preds_all1, self.accs, self.accs1,
-                         self.counters_all, self.counters_all1, self.unknown_test_preds, self.unknown_test_preds1,
-                         self.unknown_test_truths, self.unknown_test_truths1,
-                         self.tgt_member_post_all, self.predict_idl_all, self.filter_out_idx_all, args], f)
+#     def save(self, log_dir, args):
+#         with open(os.path.join(log_dir, 'tgt.pkl'), 'wb') as f:
+#             pickle.dump([self.tgt_member_all, self.tgt_member_new_all, self.dp_preds_all1, self.accs, self.accs1,
+#                          self.counters_all, self.counters_all1, self.unknown_test_preds, self.unknown_test_preds1,
+#                          self.unknown_test_truths, self.unknown_test_truths1,
+#                          self.tgt_member_post_all, self.predict_idl_all, self.filter_out_idx_all, args], f)
 
 
 
@@ -225,40 +225,7 @@ def valid(t_centers , Net, target_test_dl, output_device, log_dir, source_classe
     Net.train()
     return counters, unknown_test_truth, unknown_test_pred, acc_tests, acc_test, hos
 
-def merge_cluster(Net, Cluster, target_test_dl, output_device, log_dir, tgt_predict_src, plot=False, num_src_cls=20):
-    tgt_embedding, tgt_member, tgt_predict = [], [], []
-    with TrainingModeManager([Net.feature_extractor, Net.bottle_neck, Net.classifier],
-                             train=False) as mgr, torch.no_grad():
-        for i, (im_target, label_target) in enumerate(target_test_dl):
-            im_target = im_target.to(output_device)
-            _, feature_target, _ = Net(im_target)
-            tgt_embedding.append(feature_target.detach().cpu().numpy())
-            tgt_member.append(label_target.detach().cpu().numpy())
-
-    tgt_embedding = np.concatenate(tgt_embedding, axis=0)
-    tgt_member = np.concatenate(tgt_member, axis=0)
-    tgt_embedding_k = tgt_embedding[tgt_predict_src < num_src_cls]
-    tgt_embedding_unk = tgt_embedding[tgt_predict_src >= num_src_cls]
-    tgt_predict_k = tgt_predict_src[tgt_predict_src < num_src_cls]
-    unique_tgt_predict_k = np.unique(tgt_predict_k)
-    tgt_predict = np.copy(tgt_predict_src)
-    embedding = np.concatenate([tgt_embedding_k, tgt_embedding_unk], axis=0)
-    if plot:
-        tgt_plot = np.copy(tgt_predict)
-        tgt_plot[tgt_plot >= num_src_cls] = 30
-        plotpy2(tgt_embedding, tgt_plot)
-    print('feature size', embedding.shape)
-    tgt_member_new, _, _ = Cluster.fit_merge(embedding, tgt_predict_k, v1=False)
-    mask = ~np.isin(tgt_member_new, unique_tgt_predict_k)
-    tgt_member_new[mask] += num_src_cls
-    tgt_predict[tgt_predict_src >= num_src_cls] = tgt_member_new
-    if plot:
-        plotpy2(tgt_embedding, tgt_member)
-        plotpy2(tgt_embedding, tgt_predict)
-    return tgt_member, tgt_predict, tgt_embedding
-
-
-def plot_cluster(Net, target_test_dl, output_device, tgt_predict, cap='step'):
+def gen_cluster_input(Net, target_test_dl, output_device):
     tgt_embedding, tgt_member = [], []
     with TrainingModeManager([Net.feature_extractor, Net.bottle_neck, Net.classifier],
                              train=False) as mgr, torch.no_grad():
@@ -267,11 +234,46 @@ def plot_cluster(Net, target_test_dl, output_device, tgt_predict, cap='step'):
             _, feature_target, _ = Net(im_target)
             tgt_embedding.append(feature_target.detach().cpu().numpy())
             tgt_member.append(label_target.detach().cpu().numpy())
+        tgt_embedding = np.concatenate(tgt_embedding, axis=0)
+        tgt_member = np.concatenate(tgt_member, axis=0)
+    return tgt_embedding, tgt_member
 
-    tgt_embedding = np.concatenate(tgt_embedding, axis=0)
-    tgt_member = np.concatenate(tgt_member, axis=0)
-    plotpy2(tgt_embedding, tgt_member, cap='{} truth'.format(cap))
-    plotpy2(tgt_embedding, tgt_predict, cap='{} estimate'.format(cap))
+def merge_cluster(Cluster, tgt_embedding, tgt_member, tgt_predict_src, plot=False, num_src_cls=20):
+    tgt_embedding_k = tgt_embedding[tgt_predict_src < num_src_cls]
+    tgt_embedding_unk = tgt_embedding[tgt_predict_src >= num_src_cls]
+    tgt_predict_k = tgt_predict_src[tgt_predict_src < num_src_cls]
+    unique_tgt_predict_k = np.unique(tgt_predict_k)
+    tgt_predict = np.copy(tgt_predict_src)
+    embedding = np.concatenate([tgt_embedding_k, tgt_embedding_unk], axis=0)
+    # if plot:
+    #     tgt_plot = np.copy(tgt_predict)
+    #     tgt_plot[tgt_plot >= num_src_cls] = 30
+    #     plotpy2(tgt_embedding, tgt_plot)
+    #print('feature size', embedding.shape)
+    tgt_member_new, _, _ = Cluster.fit_merge(embedding, tgt_predict_k, v1=False)
+    mask = ~np.isin(tgt_member_new, unique_tgt_predict_k)
+    tgt_member_new[mask] += num_src_cls
+    tgt_predict[tgt_predict_src >= num_src_cls] = tgt_member_new
+    if plot:
+        plotpy2(tgt_embedding, tgt_member)
+        plotpy2(tgt_embedding, tgt_predict)
+    return tgt_predict
+
+
+# def plot_cluster(Net, target_test_dl, output_device, tgt_predict, cap='step'):
+#     tgt_embedding, tgt_member = [], []
+#     with TrainingModeManager([Net.feature_extractor, Net.bottle_neck, Net.classifier],
+#                              train=False) as mgr, torch.no_grad():
+#         for i, (im_target, label_target) in enumerate(target_test_dl):
+#             im_target = im_target.to(output_device)
+#             _, feature_target, _ = Net(im_target)
+#             tgt_embedding.append(feature_target.detach().cpu().numpy())
+#             tgt_member.append(label_target.detach().cpu().numpy())
+
+#     tgt_embedding = np.concatenate(tgt_embedding, axis=0)
+#     tgt_member = np.concatenate(tgt_member, axis=0)
+#     plotpy2(tgt_embedding, tgt_member, cap='{} truth'.format(cap))
+#     plotpy2(tgt_embedding, tgt_predict, cap='{} estimate'.format(cap))
 
 
 def ExpWeight(step, gamma=3, max_iter=5000):
@@ -281,25 +283,25 @@ def ExpWeight(step, gamma=3, max_iter=5000):
 
 
 
+# def merge_perf(tgt_member, tgt_member_new, ncls):
+#     tar_label_known = tgt_member[tgt_member < ncls]
+#     tgt_member_new_known = tgt_member_new[tgt_member < ncls]
+#     tar_label_unknown = tgt_member[tgt_member > ncls-1]
+#     tgt_member_new_unknown = tgt_member_new[tgt_member > ncls-1]
+#     print('=====nmi========', nmi(tgt_member_new,
+#                                   tgt_member))#, tgt_member_new, tgt_member, tgt_member_new.shape, tgt_member.shape)
+#     print('known acc', np.sum(tar_label_known == tgt_member_new_known) / np.sum(tgt_member < ncls),
+#           len(tar_label_known))#, tar_label_known, tgt_member_new_known)
+#     print('unknown nmi', nmi(tar_label_unknown, tgt_member_new_unknown))#, tar_label_unknown, tgt_member_new_unknown, len(tar_label_unknown))
+#     TP = np.sum((tgt_member > ncls-1) & (tgt_member_new > ncls-1))
+#     TN = np.sum((tgt_member < ncls) & (tgt_member_new < ncls))
+#     FP = np.sum((tgt_member < ncls) & (tgt_member_new > ncls-1))
+#     FN = np.sum((tgt_member > ncls-1) & (tgt_member_new < ncls))
+#     print('recall is ', TP / (TP + FN), TP, TP + FN)
+#     print('precision is', TP / (TP + FP), TP, TP + FP)
+
+
 def merge_perf(tgt_member, tgt_member_new, ncls):
-    tar_label_known = tgt_member[tgt_member < ncls]
-    tgt_member_new_known = tgt_member_new[tgt_member < ncls]
-    tar_label_unknown = tgt_member[tgt_member > ncls-1]
-    tgt_member_new_unknown = tgt_member_new[tgt_member > ncls-1]
-    print('=====nmi========', nmi(tgt_member_new,
-                                  tgt_member))#, tgt_member_new, tgt_member, tgt_member_new.shape, tgt_member.shape)
-    print('known acc', np.sum(tar_label_known == tgt_member_new_known) / np.sum(tgt_member < ncls),
-          len(tar_label_known))#, tar_label_known, tgt_member_new_known)
-    print('unknown nmi', nmi(tar_label_unknown, tgt_member_new_unknown))#, tar_label_unknown, tgt_member_new_unknown, len(tar_label_unknown))
-    TP = np.sum((tgt_member > ncls-1) & (tgt_member_new > ncls-1))
-    TN = np.sum((tgt_member < ncls) & (tgt_member_new < ncls))
-    FP = np.sum((tgt_member < ncls) & (tgt_member_new > ncls-1))
-    FN = np.sum((tgt_member > ncls-1) & (tgt_member_new < ncls))
-    print('recall is ', TP / (TP + FN), TP, TP + FN)
-    print('precision is', TP / (TP + FP), TP, TP + FP)
-
-
-def merge_perf_v2(tgt_member, tgt_member_new, ncls):
     tar_label_known = tgt_member[tgt_member < ncls]
     tgt_member_new_known = tgt_member_new[tgt_member < ncls]
     tar_label_unknown = tgt_member[tgt_member > ncls-1]
@@ -368,25 +370,25 @@ class sim_bmm(object):
 
 
 
-def kl_divergence(p, q):
-    """Compute KL divergence D(P || Q) element-wise."""
-    p = p + 1e-5  # To avoid log(0)
-    q = q + 1e-5
-    return torch.sum(p * torch.log(p / q), dim=-1)
+# def kl_divergence(p, q):
+#     """Compute KL divergence D(P || Q) element-wise."""
+#     p = p + 1e-5  # To avoid log(0)
+#     q = q + 1e-5
+#     return torch.sum(p * torch.log(p / q), dim=-1)
 
 
-def pairwise_kl_divergence(batch):
-    """
+# def pairwise_kl_divergence(batch):
+#     """
 
-    # Take log of the batch to use in KL divergence calculation
-    """
-    kl = 0.
-    n = 0
-    for i, x in enumerate(batch):
-        for j, y in enumerate(batch):
-            if i != j:
-                kl += F.kl_div(x.log(), y, reduction='none').sum(dim=-1)
-                n += 1
-    return kl/n
+#     # Take log of the batch to use in KL divergence calculation
+#     """
+#     kl = 0.
+#     n = 0
+#     for i, x in enumerate(batch):
+#         for j, y in enumerate(batch):
+#             if i != j:
+#                 kl += F.kl_div(x.log(), y, reduction='none').sum(dim=-1)
+#                 n += 1
+#     return kl/n
 
 
