@@ -12,42 +12,7 @@ import matplotlib.pyplot as plt
 ## Beta Mixture model from https://github.com/PaulAlbert31/LabelNoiseCorrection/blob/master/utils.py
 ## Some functions from https://github.com/thuml/Separate_to_Adapt/blob/master/utilities.py
 
-class HLoss(nn.Module):
-    def __init__(self):
-        super(HLoss, self).__init__()
-    def forward(self, x):
-        b = F.softmax(x, dim=1) * F.log_softmax(x, dim=1)
-        b = -1.0 * b.sum(dim=1)
-        return b
 
-class HLoss2(nn.Module):
-    def __init__(self):
-        super(HLoss2, self).__init__()
-    def forward(self, x):
-        b = x * torch.log(x)
-        b = -1.0 * b.sum(dim=1)
-        return b
-
-
-class ReverseLayerF(Function):
-    @staticmethod
-    def forward(ctx, x, alpha):
-        ctx.alpha = alpha
-        return x.view_as(x)
-    @staticmethod
-    def backward(ctx, grad_output):
-        output = grad_output.neg() * ctx.alpha
-        return output, None
-
-class WeightedForwardLayerF(Function):
-    @staticmethod
-    def forward(ctx, x, beta):
-        ctx.beta = beta
-        return x.view_as(x)
-    @staticmethod
-    def backward(ctx, grad_output):
-        output = grad_output * ctx.beta
-        return output, None
 
 def weighted_mean(x, w):
     return np.sum(w * x) / np.sum(w)
@@ -156,32 +121,6 @@ class BetaMixture1D(object):
         self.criteria = ((np.log(self.K)) - (self.betas[1] - self.betas[0])) / ( (self.alphas[1]-self.alphas[0]) - (self.betas[1]-self.betas[0]) )
         print(self.K, self.alphas[1]-self.alphas[0], beta_f(2,3))
         return self.criteria
-
-
-def CrossEntropyLoss(label, predict_prob, class_level_weight=None, instance_level_weight=None, epsilon=1e-12):
-    N, C = label.size()
-    N_, C_ = predict_prob.size()
-
-    assert N == N_ and C == C_, 'fatal error: dimension mismatch!'
-
-    if class_level_weight is None:
-        class_level_weight = 1.0
-    else:
-        if len(class_level_weight.size()) == 1:
-            class_level_weight = class_level_weight.view(1, class_level_weight.size(0))
-        assert class_level_weight.size(1) == C, 'fatal error: dimension mismatch!'
-
-    if instance_level_weight is None:
-        instance_level_weight = 1.0
-        instance_normalize = N
-    else:
-        if len(instance_level_weight.size()) == 1:
-            instance_level_weight = instance_level_weight.view(instance_level_weight.size(0), 1)
-        instance_normalize = torch.sum(instance_level_weight) + epsilon
-        assert instance_level_weight.size(0) == N, 'fatal error: dimension mismatch!'
-
-    ce = -label * torch.log(predict_prob + epsilon)
-    return torch.sum(instance_level_weight * ce * class_level_weight) / float(instance_normalize)
 
 
 
