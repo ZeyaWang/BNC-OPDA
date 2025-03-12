@@ -47,10 +47,10 @@ Cluster = BayesianGaussianMixtureMerge(
 
 
 class OptSets():
-    def __init__(self, totalNet, lr, min_step):
+    def __init__(self, totalNet, lr, min_step, lr_scale=10.0):
         scheduler = lambda step, initial_lr: inverseDecaySheduler(step, initial_lr, gamma=10, power=0.75, max_iter=min_step)
         self.optimizer_extractor = OptimWithSheduler(
-            optim.SGD(totalNet.feature_extractor.parameters(), lr=lr / 10.0,
+            optim.SGD(totalNet.feature_extractor.parameters(), lr=lr / lr_scare,
                       weight_decay=args.weight_decay, momentum=args.momentum, nesterov=True), scheduler)
 
         self.optimizer_linear = OptimWithSheduler(
@@ -63,37 +63,43 @@ class OptSets():
                       momentum=args.momentum, nesterov=True),
             scheduler)
 
-def detect(totalNet, thresh=0.5):
-    feature_list, label_list = [], []
+def detect(totalNet, thresh=0.5, score='cos'):
+    ### score = 'cos' or 'entropy' respectively corresponding to cosine similarity and entropy score
+    feature_list, label_list, pred_logits = [], [], []
     with TrainingModeManager(
             [totalNet.feature_extractor, totalNet.bottle_neck, totalNet.classifier], train=False) as mgr, \
             torch.no_grad():
         for i, (im, label) in enumerate(tqdm(target_test_dl)):
             im = im.to(output_device)
-            embedding, feature, predict_logit = totalNet(im)
+            _, feature, predict_logit = totalNet(im)
             feature_list.append(feature.detach().cpu().numpy())
+            pred_logits.append(pred_logit.detach().cpu().numpy())
             label_list.append(label.numpy())
     #print(labels)
     feature = np.concatenate(feature_list, axis=0)
-    #ys = np.concatenate(label_list, axis=0)
-    #plotpy2(feature, ys)
+    pred_logits = np.concatenate(pred_logits, axis=0)
+    entropy_scores = entropy_pytorch(pred_logits)
+    sim_bmm_model = sim_bmm(norm=True)
     init_centers = totalNet.classifier.fc.weight.detach().cpu().numpy()
     #print('===========', init_centers.shape)
     #init_centers = init_centers[:num_src_cls]
     cos = cosine_similarity(feature, init_centers) #* np.linalg.norm(init_centers, axis=1)
     #print('=================cos================', cos.max(1))
-    label_set = {}
     cos_max = cos.max(1)
     cos_argmax = cos.argmax(1)
-    sim_bmm_model = sim_bmm(norm=True)
-    sim_bmm_model.bmm_fit(cos_max)
-    #sim_bmm_model.bmm_fit(cos_max[cos_argmax < num_src_cls])
-    w_k_posterior = np.zeros(cos_max.shape)
-    #w_k_posterior_tmp, _ = sim_bmm_model.get_posterior(cos_max[cos_argmax < num_src_cls])
-    # w_k_posterior_tmp, _ = sim_bmm_model.get_posterior(cos_max)
-    # w_k_posterior[cos_argmax < num_src_cls] = w_k_posterior_tmp
-    w_k_posterior, _ = sim_bmm_model.get_posterior(cos_max)
-    #thresh = 0.5
+    if score == 'cos':
+        #ys = np.concatenate(label_list, axis=0)
+        #plotpy2(feature, ys)
+        sim_bmm_model.bmm_fit(1-cos_max)
+        #sim_bmm_model.bmm_fit(cos_max[cos_argmax < num_src_cls])
+        #w_k_posterior = np.zeros(cos_max.shape)
+        #w_k_posterior_tmp, _ = sim_bmm_model.get_posterior(cos_max[cos_argmax < num_src_cls])
+        # w_k_posterior_tmp, _ = sim_bmm_model.get_posterior(cos_max)
+        # w_k_posterior[cos_argmax < num_src_cls] = w_k_posterior_tmp
+        w_k_posterior, _ = sim_bmm_model.get_posterior(1-cos_max)
+    else:
+        sim_bmm_model.bmm_fit(entropy_scores)
+        w_k_posterior, _ = sim_bmm_model.get_posterior(entropy_scores)
     label_ = np.copy(cos_argmax)
     label_[w_k_posterior <= thresh] = 100
     return label_, cos_max, w_k_posterior, cos_argmax, feature, init_centers, sim_bmm_model
@@ -112,7 +118,7 @@ def generate_memory(tgt_predict, embedding):
     memory.init(embedding, tgt_predict_post, output_device)
     return memory, tgt_predict_post, tgt_match
 
-def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_step, interval):
+def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_step, interval, classifier=False):
     # interval: the repeated time between two clustering
     num_sample = len(train_ds)
     #score_bank = torch.full((num_sample, num_src_cls), 1.0 / num_src_cls).to(output_device)
@@ -176,10 +182,12 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
             closs_total += closs.item()
             mloss_total += mloss.item()
             loss_total += loss.item()
-            with OptimizerManager(
+            optims = [optSets.optimizer_extractor, optSets.optimizer_bottleneck]
+            if classifier == True:
+                optims.append(optSets.optimizer_linear)
+            with OptimizerManager(optims):
                     #[optSets.optimizer_extractor]):
                     #[optSets.optimizer_extractor, optSets.optimizer_bottleneck, optSets.optimizer_classifier]):
-                    [optSets.optimizer_extractor, optSets.optimizer_bottleneck]):
                 loss.backward()
             global_step += 1
         tqdm.write(f'EPOCH {epoch_step:03d}: args.interval {t:03d}, closs={closs_total:.4f}, mloss={mloss_total:.4f}, loss={loss_total:.4f}')

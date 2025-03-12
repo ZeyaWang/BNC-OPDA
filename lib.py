@@ -13,6 +13,15 @@ import plotly.express as px
 from function import BetaMixture1D
 import torch.nn.functional as F
 
+def entropy_numpy(logits):
+    K = logits.shape[-1]  # Number of classes
+    exp_logits = np.exp(logits - np.max(logits, axis=-1, keepdims=True))  # Stable softmax
+    probs = exp_logits / np.sum(exp_logits, axis=-1, keepdims=True)  # Compute probabilities
+    log_probs = np.log(probs + 1e-9)  # Avoid log(0)
+    entropy = -np.sum(probs * log_probs, axis=-1)  # Compute entropy per sample
+    max_entropy = np.log(K)  # Max entropy log(K)
+    normalized_entropy = entropy / max_entropy  # Normalize to [0, 1]
+    return normalized_entropy
 
 
 def report(predict_id, label, source_classes):
@@ -341,6 +350,7 @@ class sim_bmm(object):
     def __init__(self, norm=False):
         self.bmm_model = BetaMixture1D()
         self.norm = norm
+    
     def compute_probabilities_batch(self, sim_t, unk=1):
         sim_t[sim_t >= 1 - 1e-4] = 1 - 1e-4
         sim_t[sim_t <=  1e-4] = 1e-4
@@ -364,8 +374,8 @@ class sim_bmm(object):
         '''
         if self.norm:
             sim_t = (sim_t - self.min) / (self.max - self.min)
-        w_k_posterior = self.compute_probabilities_batch(sim_t, 1)
-        w_unk_posterior = 1 - w_k_posterior
+        w_unk_posterior = self.compute_probabilities_batch(sim_t, 1)
+        w_k_posterior = 1 - w_unk_posterior
         return w_k_posterior, w_unk_posterior
 
 
