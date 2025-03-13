@@ -13,6 +13,17 @@ import plotly.express as px
 from function import BetaMixture1D
 import torch.nn.functional as F
 
+
+def seed_everything(seed=1234):
+    import random
+    random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    import os
+    os.environ['PYTHONHASHSEED'] = str(seed)
+
+
 def entropy_numpy(logits):
     K = logits.shape[-1]  # Number of classes
     exp_logits = np.exp(logits - np.max(logits, axis=-1, keepdims=True))  # Stable softmax
