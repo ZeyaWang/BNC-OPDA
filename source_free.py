@@ -47,10 +47,10 @@ Cluster = BayesianGaussianMixtureMerge(
 
 
 class OptSets():
-    def __init__(self, totalNet, lr, min_step, lr_scale=10.0):
+    def __init__(self, totalNet, lr, min_step, lr_scale=0.1):
         scheduler = lambda step, initial_lr: inverseDecaySheduler(step, initial_lr, gamma=10, power=0.75, max_iter=min_step)
         self.optimizer_extractor = OptimWithSheduler(
-            optim.SGD(totalNet.feature_extractor.parameters(), lr=lr / lr_scale,
+            optim.SGD(totalNet.feature_extractor.parameters(), lr=lr * lr_scale,
                       weight_decay=args.weight_decay, momentum=args.momentum, nesterov=True), scheduler)
 
         self.optimizer_linear = OptimWithSheduler(
@@ -217,7 +217,7 @@ pretrain_file = os.path.join(rpath, 'UDA/pretrained_source/{}_{}.pkl'.format(arg
 totalNet = SimpleNet(num_cls=num_src_cls, output_device=output_device,
                     bottle_neck_dim=args.bottle_neck_dim, base_model=args.base_model)
 totalNet.load_model(pretrain_file, load=('feature_extractor', 'bottleneck', 'classifier'))
-optSets = OptSets(totalNet, args.lr, args.total_epoch * len(target_train_dl) * args.interval)
+optSets = OptSets(totalNet, args.lr, args.total_epoch * len(target_train_dl) * args.interval, lr_scale=args.lr_scale)
 global_step = 0
 
 metrics_epoch = {}
@@ -231,7 +231,7 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
     d_result = {}
     dt = {}
     for it, t in enumerate(threshs):
-        predict_y, cos_max, w_k_posterior, arg_y, feature, init_centers, sim_bmm_model = detect(totalNet, thresh=t)
+        predict_y, cos_max, w_k_posterior, arg_y, feature, init_centers, sim_bmm_model = detect(totalNet, thresh=t, score=args.score)
         if (len(predict_y[predict_y < 100]) == 0) or (len(predict_y[predict_y == 100]) == 0):
             continue
         if it == 0:
