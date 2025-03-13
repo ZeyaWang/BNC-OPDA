@@ -9,6 +9,7 @@ res_dict = {"resnet18":models.resnet18, "resnet34":models.resnet34,
             "resnet152":models.resnet152, "resnext50":models.resnext50_32x4d,
             "resnext101":models.resnext101_32x8d}
 
+
 class BaseFeatureExtractor(nn.Module):
     def forward(self, *input):
         pass
@@ -202,6 +203,12 @@ class feat_classifier(nn.Module):
     def forward(self, x):
         x = self.fc(x)
         return x
+
+model_dict = {
+    #'resnet50': ResNet50Fc,
+    'resnet50': ResBase,
+    'vgg16': VGG16Fc
+}
 
 class SimpleNet(nn.Module):
     def __init__(self, num_cls, output_device, bottle_neck_dim, base_model):
