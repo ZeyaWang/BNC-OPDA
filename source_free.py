@@ -78,7 +78,7 @@ def detect(totalNet, thresh=0.5, score='cos'):
     #print(labels)
     feature = np.concatenate(feature_list, axis=0)
     pred_logits = np.concatenate(pred_logits, axis=0)
-    entropy_scores = entropy_pytorch(pred_logits)
+    entropy_scores = entropy_numpy(pred_logits)
     sim_bmm_model = sim_bmm(norm=True)
     init_centers = totalNet.classifier.fc.weight.detach().cpu().numpy()
     #print('===========', init_centers.shape)
