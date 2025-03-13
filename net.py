@@ -2,7 +2,6 @@ from easydl import *
 from torchvision import models
 from collections import OrderedDict
 import torch
-from function import HLoss, HLoss2, BetaMixture1D
 import pickle
 
 res_dict = {"resnet18":models.resnet18, "resnet34":models.resnet34,
