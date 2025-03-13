@@ -73,7 +73,7 @@ def detect(totalNet, thresh=0.5, score='cos'):
             im = im.to(output_device)
             _, feature, predict_logit = totalNet(im)
             feature_list.append(feature.detach().cpu().numpy())
-            pred_logits.append(pred_logit.detach().cpu().numpy())
+            pred_logits.append(predict_logit.detach().cpu().numpy())
             label_list.append(label.numpy())
     #print(labels)
     feature = np.concatenate(feature_list, axis=0)
