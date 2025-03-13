@@ -30,6 +30,7 @@ parser.add_argument('--base_model', type=str, default='resnet50', help='resnet50
 
 ## training parameters
 parser.add_argument('--lr', type=float, default=0.01) # previous training based on lr*lr_scale
+parser.add_argument('--lr_scale', type=float, default=0.1) 
 parser.add_argument('--weight_decay', type=float, default=0.001)
 parser.add_argument('--momentum', type=float, default=0.9)
 parser.add_argument('--total_epoch', type=int, default=30, help='total epochs')
@@ -46,6 +47,7 @@ parser.add_argument('--lambdav', type=float, default=0.)
 
 # Other
 parser.add_argument('--KK', type=int, default=5)
+parser.add_argument('--score', type=str, default='cos', help='cos or entropy')
 
 
 

@@ -50,7 +50,7 @@ class OptSets():
     def __init__(self, totalNet, lr, min_step, lr_scale=10.0):
         scheduler = lambda step, initial_lr: inverseDecaySheduler(step, initial_lr, gamma=10, power=0.75, max_iter=min_step)
         self.optimizer_extractor = OptimWithSheduler(
-            optim.SGD(totalNet.feature_extractor.parameters(), lr=lr / lr_scare,
+            optim.SGD(totalNet.feature_extractor.parameters(), lr=lr / lr_scale,
                       weight_decay=args.weight_decay, momentum=args.momentum, nesterov=True), scheduler)
 
         self.optimizer_linear = OptimWithSheduler(
