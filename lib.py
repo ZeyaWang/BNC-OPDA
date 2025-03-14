@@ -185,13 +185,27 @@ class Memory(nn.Module):
         return loss.mean()
 
 
-def post_match(t_codes):
+# def post_match(t_codes):
+#     # make label of t_codes to be 0-index (0,1,2,...)
+#     # then return the match relationship between src center and tar center
+#     # return reindex t_codes and the map (src_index, tar_index)
+#     unique_elements, indices = np.unique(t_codes, return_inverse=True)
+#     #match = dict(zip(unique_elements, range(len(unique_elements))))
+#     match = dict(zip(range(len(unique_elements)), unique_elements))
+#     return indices, match
+
+def post_match(t_codes, num_src_cls):
     # make label of t_codes to be 0-index (0,1,2,...)
     # then return the match relationship between src center and tar center
     # return reindex t_codes and the map (src_index, tar_index)
-    unique_elements, indices = np.unique(t_codes, return_inverse=True)
+    t_codes_unk = t_codes[t_codes >= num_src_cls]
+    unique_elements_unk, indices_unk = np.unique(t_codes_unk, return_inverse=True)
     #match = dict(zip(unique_elements, range(len(unique_elements))))
-    match = dict(zip(range(len(unique_elements)), unique_elements))
+    indices_unk += num_src_cls
+    indices = np.copy(t_codes)
+    indices[t_codes >= num_src_cls] = indices_unk
+    match = dict(zip(range(num_src_cls, len(unique_elements_unk)+num_src_cls), unique_elements_unk))
+    match.update(dict(zip(range(num_src_cls), range(num_src_cls))))
     return indices, match
 
 # def post_match(t_codes, num_cls):
@@ -218,18 +232,16 @@ vectorized_map = np.vectorize(map_values)
 
 
 
-def valid(t_centers , Net, target_test_dl, output_device, log_dir, source_classes, tgt_match):
-    tgt_embedding, tgt_member, tgt_predict = [], [], []
+def valid(t_centers , Net, target_test_dl, output_device, source_classes, tgt_match):
+    tgt_member, tgt_predict = [], []
     Net.eval()
     for i, (im_target, label_target) in enumerate(target_test_dl):
         im_target = im_target.to(output_device)
         _, feature_target, _ = Net(im_target)
-        tgt_embedding.append(feature_target.detach().cpu().numpy())
         tgt_member.append(label_target.detach().cpu().numpy())
         clus_index = cos_simi(F.normalize(feature_target, p=2, dim=-1), t_centers).argmax(dim=-1) # get argmax of similarity to cluster
         tgt_predict.append(clus_index.detach().cpu().numpy())
 
-    tgt_embedding = np.concatenate(tgt_embedding, axis=0)
     tgt_member = np.concatenate(tgt_member, axis=0)
     tgt_predict = np.concatenate(tgt_predict, axis=0)
     tgt_predict = vectorized_map(tgt_predict, tgt_match)
@@ -327,7 +339,7 @@ def merge_perf(tgt_member, tgt_member_new, ncls):
     tar_label_unknown = tgt_member[tgt_member > ncls-1]
     tgt_member_new_unknown = tgt_member_new[tgt_member > ncls-1]
     nmi_v = nmi(tgt_member_new, tgt_member)
-    print('=====nmi========', nmi_v)#, tgt_member_new, tgt_member, tgt_member_new.shape, tgt_member.shape)
+    #print('=====nmi========', nmi_v)#, tgt_member_new, tgt_member, tgt_member_new.shape, tgt_member.shape)
     k_acc = np.sum(tar_label_known == tgt_member_new_known) / np.sum(tgt_member < ncls)
     k_acc_total = {}
     for c in np.unique(tar_label_known):
@@ -339,11 +351,11 @@ def merge_perf(tgt_member, tgt_member_new, ncls):
     known_acc = np.array(list(k_acc_total.values())).mean()
     unknown_acc = np.sum(tgt_member_new_unknown > ncls-1) / len(tgt_member_new_unknown)
     h_score = 2 * known_acc * unknown_acc / (known_acc + unknown_acc + 1e-5)
-    print('hos v2', h_score, known_acc, unknown_acc)
-    print('known acc', k_acc)#, tar_label_known, tgt_member_new_known)
+    print('hos: {}; known:{}; unknown:{}'.format(h_score, known_acc, unknown_acc))
+    #print('known acc', k_acc)#, tar_label_known, tgt_member_new_known)
     #len(tar_label_known), tar_label_known, tgt_member_new_known)
     uk_nmi = nmi(tar_label_unknown, tgt_member_new_unknown)
-    print('unknown nmi', uk_nmi)#, tar_label_unknown, tar_label_unknown, tgt_member_new_unknown)
+    print('nmi: {}; unknown nmi: {}; overall known acc: {}'.format(nmi_v, uk_nmi, k_acc))#, tar_label_unknown, tar_label_unknown, tgt_member_new_unknown)
     #tgt_member_new_unknown, len(tar_label_unknown))
     TP = np.sum((tgt_member > ncls-1) & (tgt_member_new > ncls-1))
     TN = np.sum((tgt_member < ncls) & (tgt_member_new < ncls))

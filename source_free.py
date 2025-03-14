@@ -113,7 +113,7 @@ def clustering(tgt_embedding, tgt_member, predict_src):
     return tgt_predict, metrics
 
 def generate_memory(tgt_predict, embedding):
-    tgt_predict_post, tgt_match = post_match(tgt_predict)
+    tgt_predict_post, tgt_match = post_match(tgt_predict, num_src_cls)
     memory = Memory(len(np.unique(tgt_predict_post)), feat_dim=args.bottle_neck_dim)
     memory.init(embedding, tgt_predict_post, output_device)
     return memory, tgt_predict_post, tgt_match
@@ -253,7 +253,6 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
                                                                                       totalNet,
                                                                                       target_test_dl,
                                                                                       output_device,
-                                                                                      log_dir,
                                                                                       source_classes,
                                                                                       tgt_match)
     metrics['hos'] = hos.item()
