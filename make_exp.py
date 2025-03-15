@@ -42,7 +42,7 @@ for ds, st in source_target.items():
                                 for cov in covs:
                                     for sc in scs:
                                         for cl in clf:
-                                            cmd = ('python /home/zwa281/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr {} '
+                                            cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr {} '
                                                    '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                             if cl:
                                                 cmd += '--classifier \n'
