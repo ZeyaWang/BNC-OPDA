@@ -48,6 +48,7 @@ parser.add_argument('--lambdav', type=float, default=0.)
 # Other
 parser.add_argument('--KK', type=int, default=5)
 parser.add_argument('--score', type=str, default='cos', help='cos or entropy')
+parser.add_argument('--classifier', action='store_true')
 
 args = parser.parse_args()  # This converts argparse into an args object
 

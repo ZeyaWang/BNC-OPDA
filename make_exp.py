@@ -12,7 +12,7 @@ subff = open('submit.py','w')
 subff.write('import os\n')
 
 
-domain = {'visda-train-config.yaml': ['train', 'validation']}
+domain = {'office': ['train', 'validation']}
 
 source_target = {
     'visda-train-config.yaml': [[0,1]]
@@ -39,9 +39,7 @@ for ds, st in source_target.items():
                         outcsv = 'exp_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, interval, alpha, lr_scale)
                         if not os.path.isfile(outcsv):
                             outline.append(
-                                #'python /home/zwa281/UDA/UDA5/source_free_clean.py --config {} --source {} --target {} --balance {} --lambdav {} --interval {} \n'.format(ds, src, tar, balance, alpha, interval))
-                                'python /home/zwa281/UDA/UDA5/source_free_clean.py --config {} --source {} --target {} --balance {} --lr_scale {} --interval {} --lambdav {} --max_k {}\n'.format(ds, src, tar, balance, lr_scale, interval, alpha, max_k))
-
+                                'python /home/zwa281/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr_scale {} --interval {} --lambdav {} --max_k {}\n'.format(ds, src, tar, balance, lr_scale, interval, alpha, max_k))
                         else:
                             print('======{} exists======'.format(outcsv))
 nn = 3# 7

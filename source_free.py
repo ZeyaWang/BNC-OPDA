@@ -118,7 +118,7 @@ def generate_memory(tgt_predict, embedding):
     memory.init(embedding, tgt_predict_post, output_device)
     return memory, tgt_predict_post, tgt_match
 
-def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_step, interval, classifier=False):
+def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_step, classifier=False):
     # interval: the repeated time between two clustering
     num_sample = len(train_ds)
     #score_bank = torch.full((num_sample, num_src_cls), 1.0 / num_src_cls).to(output_device)
@@ -261,7 +261,7 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
     if hos > best_hos:
         best_hos = hos
         best_metrics = metrics
-    global_step, closs_total_t, mloss_total_t, loss_total_t = train(totalNet, target_train_ds, memory, optSets, epoch_id, global_step, args.total_epoch, args.interval)
+    global_step, closs_total_t, mloss_total_t, loss_total_t = train(totalNet, target_train_ds, memory, optSets, epoch_id, global_step, args.total_epoch, args.classifer)
     metrics['global_step'] = global_step
     metrics['closs_total'] = closs_total_t
     metrics['mloss_total'] = mloss_total_t
