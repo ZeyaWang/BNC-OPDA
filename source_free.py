@@ -208,7 +208,7 @@ with open(join(log_dir, 'config.yaml'), 'w') as f:
     f.write(yaml.dump(args))
 
 rpath = '/home/zwa281/UDA'
-rpath = '/storage'
+#rpath = '/storage'
 
 
 

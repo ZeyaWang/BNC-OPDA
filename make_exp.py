@@ -27,7 +27,7 @@ lr_scales = [0.1]
 max_k = 100
 lrs = [0.001, 0.0005, 0.0001]
 KKs = [5, 30]
-covs = [0.01, 0.001, 0.1]
+covs = [0.01, 0.001]
 #scs = ['cos', 'entropy']
 scs = ['cos']
 clf = [False] # [False, True]
@@ -53,7 +53,7 @@ for ds, st in source_target.items():
                                                 outline.append(cmd)
                                             else:
                                                 print('======{} exists======'.format(outcsv))
-nn = 3# 7
+nn = 5# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
