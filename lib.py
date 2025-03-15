@@ -185,38 +185,28 @@ class Memory(nn.Module):
         return loss.mean()
 
 
-# def post_match(t_codes):
-#     # make label of t_codes to be 0-index (0,1,2,...)
-#     # then return the match relationship between src center and tar center
-#     # return reindex t_codes and the map (src_index, tar_index)
-#     unique_elements, indices = np.unique(t_codes, return_inverse=True)
-#     #match = dict(zip(unique_elements, range(len(unique_elements))))
-#     match = dict(zip(range(len(unique_elements)), unique_elements))
-#     return indices, match
-
-def post_match(t_codes, num_src_cls):
+def post_match(t_codes):
     # make label of t_codes to be 0-index (0,1,2,...)
     # then return the match relationship between src center and tar center
     # return reindex t_codes and the map (src_index, tar_index)
-    t_codes_unk = t_codes[t_codes >= num_src_cls]
-    unique_elements_unk, indices_unk = np.unique(t_codes_unk, return_inverse=True)
+    unique_elements, indices = np.unique(t_codes, return_inverse=True)
     #match = dict(zip(unique_elements, range(len(unique_elements))))
-    indices_unk += num_src_cls
-    indices = np.copy(t_codes)
-    indices[t_codes >= num_src_cls] = indices_unk
-    match = dict(zip(range(num_src_cls, len(unique_elements_unk)+num_src_cls), unique_elements_unk))
-    match.update(dict(zip(range(num_src_cls), range(num_src_cls))))
+    match = dict(zip(range(len(unique_elements)), unique_elements))
     return indices, match
 
-# def post_match(t_codes, num_cls):
+# def post_match(t_codes, num_src_cls):
 #     # make label of t_codes to be 0-index (0,1,2,...)
 #     # then return the match relationship between src center and tar center
 #     # return reindex t_codes and the map (src_index, tar_index)
-#     t_codes_unk = t_codes[t_codes >= num_cls]
-#     unique_elements, indices = np.unique(t_codes_unk, return_inverse=True)
-#     t_codes[t_codes >= num_cls] = indices + num_cls
-#     match = dict(zip(unique_elements, range(len(unique_elements))))
-#     return t_codes, match
+#     t_codes_unk = t_codes[t_codes >= num_src_cls]
+#     unique_elements_unk, indices_unk = np.unique(t_codes_unk, return_inverse=True)
+#     #match = dict(zip(unique_elements, range(len(unique_elements))))
+#     indices_unk += num_src_cls
+#     indices = np.copy(t_codes)
+#     indices[t_codes >= num_src_cls] = indices_unk
+#     match = dict(zip(range(num_src_cls, len(unique_elements_unk)+num_src_cls), unique_elements_unk))
+#     match.update(dict(zip(range(num_src_cls), range(num_src_cls))))
+#     return indices, match
 
 
 def cos_simi(x1, x2):
