@@ -17,19 +17,19 @@ domain = {'visda': ['train', 'validation']}
 source_target = {
     'visda': [[0,1]]
 }
-
+outline = []
 intervals = [1]
 #balances = [0.001, 0.01, 0.1, 1.0]
 #balances = [0.001, 0.01]
 lambdavs = [0.0]
 balances = [0.001, 0.01]
-lr_scales = [10.0, 1.0, 0.1]
+lr_scales = [0.1]
 max_k = 100
-outline = []
-lrs = []
-KKs = [5, 10, 20, 50]
+lrs = [0.001, 0.0005, 0.0001]
+KKs = [5, 30]
 covs = [0.01, 0.001, 0.1]
-scs = ['cos', 'entropy']
+#scs = ['cos', 'entropy']
+scs = ['cos']
 clf = [False] # [False, True]
 for ds, st in source_target.items():
     for src, tar in st:
