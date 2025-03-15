@@ -15,33 +15,39 @@ subff.write('import os\n')
 domain = {'office': ['train', 'validation']}
 
 source_target = {
-    'visda-train-config.yaml': [[0,1]]
+    'visda': [[0,1]]
 }
 
-#intervals = [1, 10]
-#intervals = [1, 10]
 intervals = [1]
 #balances = [0.001, 0.01, 0.1, 1.0]
 #balances = [0.001, 0.01]
-alphas = [0.0]
+lambdavs = [0.0]
 balances = [0.001, 0.01]
 lr_scales = [10.0, 1.0, 0.1]
-#alphas = [0.0]
 max_k = 100
 outline = []
+lrs = []
+KKs = [5, 10, 20, 50]
+covs = [0.01, 0.001, 0.1]
+scs = ['cos', 'entropy']
 
 for ds, st in source_target.items():
     for src, tar in st:
         for interval in intervals:
             for balance in balances:
-                for alpha in alphas:
-                    for lr_scale in lr_scales:
-                        outcsv = 'exp_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, interval, alpha, lr_scale)
-                        if not os.path.isfile(outcsv):
-                            outline.append(
-                                'python /home/zwa281/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr_scale {} --interval {} --lambdav {} --max_k {}\n'.format(ds, src, tar, balance, lr_scale, interval, alpha, max_k))
-                        else:
-                            print('======{} exists======'.format(outcsv))
+                for lambdav in lambdavs:
+                    for lr in lrs:
+                        for lr_scale in lr_scales:
+                            for KK in KKs:
+                                for cov in covs:
+                                    for sc in scs:
+                                        outcsv = 'exp_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, interval, alpha, lr_scale)
+                                        if not os.path.isfile(outcsv):
+                                            outline.append(
+                                                'python /home/zwa281/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} \n'.format(ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc))
+                                        else:
+                                            print('======{} exists======'.format(outcsv))
 nn = 3# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
