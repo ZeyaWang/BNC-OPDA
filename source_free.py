@@ -261,7 +261,7 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
     if hos > best_hos:
         best_hos = hos
         best_metrics = metrics
-    global_step, closs_total_t, mloss_total_t, loss_total_t = train(totalNet, target_train_ds, memory, optSets, epoch_id, global_step, args.total_epoch, args.classifer)
+    global_step, closs_total_t, mloss_total_t, loss_total_t = train(totalNet, target_train_ds, memory, optSets, epoch_id, global_step, args.total_epoch, args.classifier)
     metrics['global_step'] = global_step
     metrics['closs_total'] = closs_total_t
     metrics['mloss_total'] = mloss_total_t
@@ -273,8 +273,9 @@ with open(f'{log_dir}/output.pkl', 'wb') as file:
 
 
 best_df = pd.DataFrame([[best_metrics['hos'], best_metrics['acc_test'], best_metrics['nmi'], best_metrics['k_acc'], best_metrics['uk_nmi']]+list(best_metrics['acc_tests'].values())] )
-best_df.to_csv('exp_{}_{}_{}_{}_{}_{}.csv'.format(source_domain_name, target_domain_name, args.balance, args.interval, args.lambdav, args.lr), index=False, header=False)
-
+outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
+                                                              args.interval, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier)
+best_df.to_csv(outcsv)
 sys.stdout = old_stdout
 log_file.close()
 

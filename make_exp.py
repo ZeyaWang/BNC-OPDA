@@ -12,7 +12,7 @@ subff = open('submit.py','w')
 subff.write('import os\n')
 
 
-domain = {'office': ['train', 'validation']}
+domain = {'visda': ['train', 'validation']}
 
 source_target = {
     'visda': [[0,1]]
@@ -30,7 +30,7 @@ lrs = []
 KKs = [5, 10, 20, 50]
 covs = [0.01, 0.001, 0.1]
 scs = ['cos', 'entropy']
-
+clf = [False] # [False, True]
 for ds, st in source_target.items():
     for src, tar in st:
         for interval in intervals:
@@ -41,13 +41,18 @@ for ds, st in source_target.items():
                             for KK in KKs:
                                 for cov in covs:
                                     for sc in scs:
-                                        outcsv = 'exp_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, interval, alpha, lr_scale)
-                                        if not os.path.isfile(outcsv):
-                                            outline.append(
-                                                'python /home/zwa281/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr {} '
-                                                '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} \n'.format(ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc))
-                                        else:
-                                            print('======{} exists======'.format(outcsv))
+                                        for cl in clf:
+                                            cmd = ('python /home/zwa281/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                   '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
+                                            if cl:
+                                                cmd += '--classifier \n'
+                                            else:
+                                                cmd += '\n'
+                                            outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
+                                            if not os.path.isfile(outcsv):
+                                                outline.append(cmd)
+                                            else:
+                                                print('======{} exists======'.format(outcsv))
 nn = 3# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
