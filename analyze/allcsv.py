@@ -15,7 +15,7 @@ for f in os.listdir(fd):
     if f.endswith('.csv'):
         #print(f)
         ff = os.path.join(fd, f)
-        res = pd.read_csv(ff, header=None).iloc[0].tolist()
+        res = pd.read_csv(ff, header=None).iloc[1].tolist()
         f2 = f.replace('Real_World', 'RealWorld')
         #print(f2)
         _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
