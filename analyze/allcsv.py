@@ -55,6 +55,7 @@ for k in myd:
     ddd = pd.concat([dd1, dd2, dd3], ignore_index=True)
     ddd = ddd[['task',2,3,4,5,6]]
     ddd = ddd.rename(columns={2: 'hos',3: 'acc',4: 'nmi',5: 'known acc',6: 'unknown nmi'})
-    print(k, ddd)  
+    print(k)
+    print(ddd)  
 
 
