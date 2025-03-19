@@ -18,11 +18,11 @@ for f in os.listdir(fd):
         res = pd.read_csv(ff, header=None).iloc[0].tolist()
         f2 = f.replace('Real_World', 'RealWorld')
         #print(f2)
-        _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc = f2[:-4].split('_')
+        _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
         hos, acc_test, nmi, k_acc, uk_nmi = res[:5]
         #if lam not in ['0.1','1.0'] and interval != '10':
         #myd[(lam, lam2, interval)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
-        myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
+        myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
 
 for k in myd:
     myd[k].sort()
