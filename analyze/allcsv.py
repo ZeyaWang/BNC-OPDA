@@ -22,7 +22,7 @@ for f in os.listdir(fd):
         hos, acc_test, nmi, k_acc, uk_nmi = res[1:6]
         #if lam not in ['0.1','1.0'] and interval != '10':
         #myd[(lam, lam2, interval)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
-        if (balance == 0.01) and (KK > 5):
+        if (balance == '0.01') and (KK != '5'):
             myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
 
 for k in myd:
