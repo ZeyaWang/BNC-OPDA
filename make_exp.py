@@ -24,13 +24,14 @@ intervals = [1]
 lambdavs = [0.0]
 balances = [0.01]#[0.001, 0.01]
 lr_scales = [0.1]
+lr_scales = [1, 0.1,0.01]
 max_k = 100
-lrs = [0.01, 0.001]#[0.001, 0.0005, 0.0001]
-KKs = [50, 100]#[5, 30]
+lrs = [0.001]#[0.01, 0.001, 0.0005, 0.0001]
+KKs = [50, 30]#[5, 30, 100]
 covs = [0.001]#[0.01, 0.001]
-scs = ['cos', 'entropy']
-#scs = ['cos']
-clf = [False] # [False, True]
+#scs = ['cos', 'entropy']
+scs = ['cos']
+clf = [False, True] # [False, True]
 for ds, st in source_target.items():
     for src, tar in st:
         for interval in intervals:
@@ -53,7 +54,7 @@ for ds, st in source_target.items():
                                                 outline.append(cmd)
                                             else:
                                                 print('======{} exists======'.format(outcsv))
-nn = 5# 7
+nn = 7# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
