@@ -2,7 +2,7 @@
 .DS_Store
 */.DS_Store
 */*/.DS_Store
-old
+old*
 _pycache_
 data
 exp*

@@ -9,7 +9,7 @@ dm2 = ['amazon', 'dslr', 'webcam']
 dm3 = ['train', 'validation']
 
 myd = defaultdict(list)
-fd = '../'
+fd = '../old'
 print('===========', fd, '===========')
 for f in os.listdir(fd):
     if f.endswith('.csv'):
