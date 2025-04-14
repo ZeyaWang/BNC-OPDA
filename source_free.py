@@ -54,12 +54,12 @@ class OptSets():
                       weight_decay=args.weight_decay, momentum=args.momentum, nesterov=True), scheduler)
 
         self.optimizer_linear = OptimWithSheduler(
-            optim.SGD(totalNet.classifier.parameters(), lr=lr, weight_decay=args.weight_decay,
+            optim.SGD(totalNet.classifier.parameters(), lr=lr , weight_decay=args.weight_decay,
                       momentum=args.momentum, nesterov=True),
             scheduler)
 
         self.optimizer_bottleneck = OptimWithSheduler(
-            optim.SGD(totalNet.bottle_neck.parameters(), lr=lr, weight_decay=args.weight_decay,
+            optim.SGD(totalNet.bottle_neck.parameters(), lr=lr * lr_scale, weight_decay=args.weight_decay,
                       momentum=args.momentum, nesterov=True),
             scheduler)
 
