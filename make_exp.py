@@ -27,6 +27,7 @@ lr_scales = [0.1]
 lr_scales = [1, 0.1,0.01]
 lr_scales = [0.001]
 lr_scales = [0.1,0.01,0.001]
+lr_scales = [0.01]
 max_k = 100
 lrs = [0.001]#[0.01, 0.001, 0.0005, 0.0001]
 KKs = [50, 30]#[5, 30, 100]
@@ -34,6 +35,7 @@ covs = [0.001]#[0.01, 0.001]
 #scs = ['cos', 'entropy']
 scs = ['cos']
 clf = [False, True] # [False, True]
+clf = [True]
 for ds, st in source_target.items():
     for src, tar in st:
         for interval in intervals:
