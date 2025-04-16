@@ -212,7 +212,7 @@ rpath = '/home/zwa281/UDA'
 
 
 
-pretrain_file = os.path.join(rpath, 'UDA/pretrained_source/{}_{}.pkl'.format(args.dataset, domain_map[args.dataset][args.source]))
+pretrain_file = os.path.join(rpath, 'UDA/pretrained_source_str/{}_{}.pkl'.format(args.dataset, domain_map[args.dataset][args.source]))
 
 totalNet = SimpleNet(num_cls=num_src_cls, output_device=output_device,
                     bottle_neck_dim=args.bottle_neck_dim, base_model=args.base_model)
