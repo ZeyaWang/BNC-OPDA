@@ -258,6 +258,7 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
     metrics['hos'] = hos.item()
     metrics['acc_tests'] = acc_tests
     metrics['acc_test'] = acc_test.item()
+    metrics['epoch_id'] = epoch_id
     if hos > best_hos:
         best_hos = hos
         best_metrics = metrics
@@ -272,7 +273,7 @@ with open(f'{log_dir}/output.pkl', 'wb') as file:
     pk.dump([metrics_epoch, best_metrics], file)
 
 
-best_df = pd.DataFrame([[best_metrics['hos'], best_metrics['acc_test'], best_metrics['nmi'], best_metrics['k_acc'], best_metrics['uk_nmi']]+list(best_metrics['acc_tests'].values())] )
+best_df = pd.DataFrame([[best_metrics['epoch_id'], best_metrics['hos'], best_metrics['acc_test'], best_metrics['nmi'], best_metrics['k_acc'], best_metrics['uk_nmi']]+list(best_metrics['acc_tests'].values())] )
 outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
                                                               args.interval, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier)
 best_df.to_csv(outcsv)
