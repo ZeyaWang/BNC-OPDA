@@ -67,9 +67,9 @@ for ds, st in source_target.items():
                                             cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr {} '
                                                    '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                             if cl:
-                                                cmd += '--classifier'
+                                                cmd += '--classifier \n'
                                             else:
-                                                cmd += ''
+                                                cmd += '\n'
                                             outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
                                             if not os.path.isfile(outcsv):
                                                 outline.append(cmd)
@@ -81,7 +81,6 @@ for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
 cuda_list = [1,3,5,7]
 for ii in range(nn):
-    cc=cuda_list[ii]
     job = 'UDA_{}'.format(ii)
     jobName=job + '.sh'
     outf = open(jobName,'w')
@@ -101,7 +100,7 @@ for ii in range(nn):
     outf.write('source ~/miniconda/etc/profile.d/conda.sh\n')
     outf.write('conda activate myenvs\n')
     for l in split_lists[ii]:
-        outf.write('CUDA_VISIBLE_DEVICES={} '.format(cc)+l+' --gid {}\n'.format(cc))
+        outf.write('CUDA_VISIBLE_DEVICES={} '.format(cuda_list[ii])+l)
     outf.close()
     subff.write('os.system("sbatch %s")\n' % jobName)
 subff.close()
