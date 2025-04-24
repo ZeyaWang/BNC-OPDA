@@ -67,9 +67,9 @@ for ds, st in source_target.items():
                                             cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr {} '
                                                    '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                             if cl:
-                                                cmd += '--classifier \n'
+                                                cmd += '--classifier'
                                             else:
-                                                cmd += '\n'
+                                                cmd += ''
                                             outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
                                             if not os.path.isfile(outcsv):
                                                 outline.append(cmd)
@@ -101,7 +101,7 @@ for ii in range(nn):
     outf.write('source ~/miniconda/etc/profile.d/conda.sh\n')
     outf.write('conda activate myenvs\n')
     for l in split_lists[ii]:
-        outf.write('CUDA_VISIBLE_DEVICES={} '.format(cc)+l+' --gid {}'.format(cc))
+        outf.write('CUDA_VISIBLE_DEVICES={} '.format(cc)+l+' --gid {}\n'.format(cc))
     outf.close()
     subff.write('os.system("sbatch %s")\n' % jobName)
 subff.close()
