@@ -34,7 +34,7 @@ if args.gpus < 1:
 else:
     gpu_ids = select_GPUs(args.gpus)
     output_device = gpu_ids[0]
-
+print('==========, device, ', output_device)
 Cluster = BayesianGaussianMixtureMerge(
     n_components=args.max_k,
     n_init=5,
