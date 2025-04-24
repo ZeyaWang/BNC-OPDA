@@ -48,7 +48,7 @@ for ds, st in source_target.items():
                                 for cov in covs:
                                     for sc in scs:
                                         for cl in clf:
-                                            #CUDA_VISIBLE_DEVICES=2,3,5,6,7
+                                            #CUDA_VISIBLE_DEVICES=1,3,5,7
                                             cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr {} '
                                                    '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                             if cl:
