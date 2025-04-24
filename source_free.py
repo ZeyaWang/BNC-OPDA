@@ -32,8 +32,9 @@ if args.gpus < 1:
     gpu_ids = []
     output_device = torch.device('cpu')
 else:
-    gpu_ids = select_GPUs(args.gpus)
-    output_device = gpu_ids[0]
+    # gpu_ids = select_GPUs(args.gpus)
+    # output_device = gpu_ids[0]
+    output_device = torch.device('cuda:{}'.format(args.gid))
 print('==========, device, ', output_device)
 Cluster = BayesianGaussianMixtureMerge(
     n_components=args.max_k,
