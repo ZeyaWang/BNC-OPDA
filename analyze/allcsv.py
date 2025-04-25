@@ -19,7 +19,10 @@ for f in os.listdir(fd):
         f2 = f.replace('Real_World', 'RealWorld')
         #print(f2)
         _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
-        hos, acc_test, nmi, k_acc, uk_nmi = res[1:6]
+        if len(res) == 17:
+            hos, acc_test, nmi, k_acc, uk_nmi = res[1:6]
+        else:
+            hos, acc_test, nmi, k_acc, uk_nmi = res[2:7]
         #if lam not in ['0.1','1.0'] and interval != '10':
         #myd[(lam, lam2, interval)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
         if (balance == '0.01') and (KK != '5'):
