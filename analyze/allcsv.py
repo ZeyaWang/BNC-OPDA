@@ -21,12 +21,14 @@ for f in os.listdir(fd):
         _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
         if (res[1] < 1) and (res[1] > 0):
             hos, acc_test, nmi, k_acc, uk_nmi = res[1:6]
+            epoch = None
         else:
             hos, acc_test, nmi, k_acc, uk_nmi = res[2:7]
+            epoch = int(res[1])
         #if lam not in ['0.1','1.0'] and interval != '10':
         #myd[(lam, lam2, interval)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
         if (balance == '0.01'):# and (KK != '5'):
-            myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
+            myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
 
 for k in myd:
     myd[k].sort()
@@ -58,7 +60,7 @@ for k in myd:
     dd2.loc['mean'] = mean2
     ddd = pd.concat([dd1, dd2, dd3], ignore_index=True)
     ddd = ddd[['task',2,3,4,5,6]]
-    ddd = ddd.rename(columns={2: 'hos',3: 'acc',4: 'nmi',5: 'known acc',6: 'unknown nmi'})
+    ddd = ddd.rename(columns={2: 'hos',3: 'acc',4: 'nmi',5: 'known acc',6: 'unknown nmi', 7: 'epoch'})
     print(k)
     print(ddd)  
 
