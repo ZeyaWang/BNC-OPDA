@@ -24,7 +24,7 @@ domain = {'office': ['amazon', 'dslr', 'webcam'],
 #     'visda': [[0,1]]
 # }
 source_target = {
-    'office': [[0,1],[0,2],[1,2],[2,1],[1,0],[2,0]],
+    # 'office': [[0,1],[0,2],[1,2],[2,1],[1,0],[2,0]],
     'officehome': [[0, 1], [0, 2], [0, 3], [1, 0], [1, 2], [1, 3], [2, 0], [2, 1], [2, 3], [3, 0],
                                      [3, 1], [3, 2]]
 }
@@ -41,8 +41,8 @@ lr_scales = [0.1]
 max_k = 100
 # lrs = [0.001]#[0.01, 0.001, 0.0005, 0.0001]
 # lrs = [0.001, 0.0005]
-KKs = [5,10,50]#[5, 30, 100]
-KKs = [5,10]
+# KKs = [5,10,50]#[5, 30, 100]
+KKs = [50, 100]
 covs = [0.001]#[0.01, 0.001]
 #scs = ['cos', 'entropy']
 scs = ['cos']
@@ -51,8 +51,10 @@ clf = [True]
 for ds, st in source_target.items():
     if ds == 'office':
         lrs = [0.01, 0.1]
+        KKs = [5]
     elif ds == 'officehome':
         lrs = [0.001, 0.0001]
+        lrs = [0.0001]
     for src, tar in st:
         for interval in intervals:
             for balance in balances:
@@ -75,11 +77,11 @@ for ds, st in source_target.items():
                                                 outline.append(cmd)
                                             else:
                                                 print('======{} exists======'.format(outcsv))
-nn = 7
+nn = 6
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
-cuda_list = [0,1,2,3,5,6,7]
+cuda_list = [0,1,2,3,6,7]
 for ii in range(nn):
     job = 'UDA_{}'.format(ii)
     jobName=job + '.sh'

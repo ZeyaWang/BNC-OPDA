@@ -24,15 +24,15 @@ intervals = [1]
 lambdavs = [0.0]
 balances = [0.01]#[0.001, 0.01]
 lr_scales = [0.1]
-lr_scales = [1, 0.1,0.01]
-lr_scales = [0.001]
-lr_scales = [0.1,0.01,0.001]
-lr_scales = [0.01, 0.1]
+# lr_scales = [1, 0.1,0.01]
+# lr_scales = [0.001]
+# lr_scales = [0.1,0.01,0.001]
+# lr_scales = [0.01, 0.1]
 max_k = 100
 lrs = [0.001]#[0.01, 0.001, 0.0005, 0.0001]
-lrs = [0.001, 0.0005]
-KKs = [50, 30]#[5, 30, 100]
-KKs = [3,5]
+#lrs = [0.001, 0.0005]
+KKs = [100, 200]#[5, 30, 100]
+#KKs = [3,5]
 covs = [0.001]#[0.01, 0.001]
 #scs = ['cos', 'entropy']
 scs = ['cos']
@@ -65,7 +65,7 @@ nn = 1# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
-
+cuda_list = [5]
 for ii in range(nn):
     job = 'DA_{}'.format(ii)
     jobName=job + '.sh'
@@ -86,7 +86,7 @@ for ii in range(nn):
     outf.write('source ~/miniconda/etc/profile.d/conda.sh\n')
     outf.write('conda activate myenvs\n')
     for l in split_lists[ii]:
-        outf.write(l)
+        outf.write('CUDA_VISIBLE_DEVICES={} '.format(cuda_list[ii])+l)
     outf.close()
     subff.write('os.system("sbatch %s")\n' % jobName)
 subff.close()
