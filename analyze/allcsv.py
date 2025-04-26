@@ -19,7 +19,7 @@ for f in os.listdir(fd):
         f2 = f.replace('Real_World', 'RealWorld')
         #print(f2)
         _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
-        if res[1] < 1:
+        if (res[1] < 1) and (res[1] > 0):
             hos, acc_test, nmi, k_acc, uk_nmi = res[1:6]
         else:
             hos, acc_test, nmi, k_acc, uk_nmi = res[2:7]
