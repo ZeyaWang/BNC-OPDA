@@ -38,11 +38,15 @@ def entropy_numpy(logits):
 def report(predict_id, label, source_classes):
     counters = [AccuracyCounter() for x in range(len(source_classes) + 1)]
     unknown_test_truth, unknown_test_pred = [], []
+    known_test_truth, known_test_pred = [], []
+
     for (each_pred_id, each_label) in zip(predict_id, label):
         if each_label in source_classes:
             counters[each_label].Ntotal += 1.0
             if each_pred_id == each_label:
                 counters[each_label].Ncorrect += 1.0
+            known_test_pred.append(each_pred_id)
+            known_test_truth.append(each_label)
         else:
             unknown_test_pred.append(each_pred_id)
             unknown_test_truth.append(each_label)
@@ -50,7 +54,7 @@ def report(predict_id, label, source_classes):
             if each_pred_id >= len(source_classes):
                 counters[-1].Ncorrect += 1.0
     acc_tests = {ii: x.reportAccuracy() for ii, x in enumerate(counters) if not np.isnan(x.reportAccuracy())}
-    return counters, unknown_test_truth, unknown_test_pred, acc_tests
+    return counters, unknown_test_truth, unknown_test_pred, known_test_truth, known_test_pred, acc_tests
 
 
 # class LogUpdater():
@@ -236,16 +240,19 @@ def valid(t_centers , Net, target_test_dl, output_device, source_classes, tgt_ma
     tgt_predict = np.concatenate(tgt_predict, axis=0)
     tgt_predict = vectorized_map(tgt_predict, tgt_match)
     merge_perf(tgt_member, tgt_predict, ncls=len(source_classes))
-    counters, unknown_test_truth, unknown_test_pred, acc_tests = report(tgt_predict, tgt_member, source_classes)
+    counters, unknown_test_truth, unknown_test_pred, known_test_truth, known_test_pred, acc_tests = report(tgt_predict, tgt_member, source_classes)
     acc_test = np.round(np.mean(list(acc_tests.values())), 3)
     acc_testv = np.array(list(acc_tests.values()))
     kn_acc = np.mean(acc_testv[:-1])
     unk_acc = acc_testv[-1]
     hos = 2 * (kn_acc * unk_acc) / (kn_acc + unk_acc)
+    nmi_v = nmi(tgt_member,tgt_predict)
+    unk_nmi = nmi(unknown_test_truth, unknown_test_pred)
+    k_acc = np.sum(np.array(known_test_truth) == np.array(known_test_pred)) / len(known_test_truth)
     print(
-        '*********evaluate performance********** acc_tests: {}, acc_test: {}, hos: {}'.format(acc_tests, acc_test, hos))
+        '*********evaluate performance********** acc_tests: {}, acc_test: {}, hos: {}, nmi: {}, unk_nmi: {}, k_acc: {}'.format(acc_tests, acc_test, hos, nmi_v, unk_nmi, k_acc))
     Net.train()
-    return counters, unknown_test_truth, unknown_test_pred, acc_tests, acc_test, hos
+    return counters, unknown_test_truth, unknown_test_pred, acc_tests, acc_test, hos, nmi_v, unk_nmi, k_acc, tgt_member, tgt_predict
 
 def gen_cluster_input(Net, target_test_dl, output_device):
     tgt_embedding, tgt_member = [], []

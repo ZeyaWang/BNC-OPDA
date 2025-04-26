@@ -111,7 +111,7 @@ def detect(totalNet, thresh=0.5, score='cos'):
 def clustering(tgt_embedding, tgt_member, predict_src):
     tgt_predict = merge_cluster(Cluster, tgt_embedding, tgt_member, predict_src, plot=False, num_src_cls=num_src_cls)
     nmi_v, k_acc, uk_nmi, rec, prec = merge_perf(tgt_member, tgt_predict, ncls=num_src_cls)
-    metrics = {'nmi': nmi_v.item(), 'k_acc': k_acc.item(), 'uk_nmi': uk_nmi.item(), 'rec': rec.item(), 'prec': prec.item()}
+    metrics = {'cl_nmi': nmi_v.item(), 'cl_k_acc': k_acc.item(), 'cl_uk_nmi': uk_nmi.item(), 'cl_rec': rec.item(), 'cl_prec': prec.item()}
     return tgt_predict, metrics
 
 def generate_memory(tgt_predict, embedding):
@@ -201,7 +201,9 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
 
 
 now = datetime.datetime.now().strftime('%b%d_%H-%M-%S')
-log_dir = f'exp_{args.dataset}/{source_domain_name}_{target_domain_name}/{args.balance}_{args.interval}_{args.lambdav}_{args.lr}/{now}'
+subdir = f'{args.balance}_{args.lr}_{args.lr_scale}_{args.interval}_{args.lambdav}_{args.max_k}_{args.KK}_{args.covariance_prior}_{args.score}_{args.classifier}'
+#log_dir = f'exp_{args.dataset}/{source_domain_name}_{target_domain_name}/{args.balance}_{args.interval}_{args.lambdav}_{args.lr}/{now}'
+log_dir = f'exp_{args.dataset}/{source_domain_name}_{target_domain_name}/{subdir}/{now}'
 logger = SummaryWriter(log_dir)
 old_stdout = sys.stdout
 log_file = open(f'{log_dir}/message.log', 'w')
@@ -251,12 +253,18 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
     target_train_ds.labels = list(zip([i for i in range(len(target_train_ds.datas))], tgt_predict_post))
     target_train_dl = DataLoader(dataset=target_train_ds, batch_size=args.batch_size, shuffle=True,
                                  num_workers=data_workers, drop_last=True)
-    counters, unknown_test_truth, unknown_test_pred, acc_tests, acc_test, hos = valid(memory.memory,
-                                                                                      totalNet,
-                                                                                      target_test_dl,
-                                                                                      output_device,
-                                                                                      source_classes,
-                                                                                      tgt_match)
+    (counters, unknown_test_truth, unknown_test_pred, acc_tests, acc_test, hos,
+    nmi_v, unk_nmi, k_acc, tgt_member, tgt_predict) = valid(memory.memory,
+                                                              totalNet,
+                                                              target_test_dl,
+                                                              output_device,
+                                                              source_classes,
+                                                              tgt_match)
+    metrics['nmi'] = nmi_v
+    metrics['unk_nmi'] = unk_nmi
+    metrics['k_acc'] = k_acc
+    metrics['tgt_member'] = tgt_member
+    metrics['tgt_predict'] = tgt_predict
     metrics['hos'] = hos.item()
     metrics['acc_tests'] = acc_tests
     metrics['acc_test'] = acc_test.item()
