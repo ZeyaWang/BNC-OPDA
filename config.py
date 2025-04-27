@@ -34,7 +34,7 @@ parser.add_argument('--lr', type=float, default=0.01) # previous training based 
 parser.add_argument('--lr_scale', type=float, default=0.1) 
 parser.add_argument('--weight_decay', type=float, default=0.001)
 parser.add_argument('--momentum', type=float, default=0.9)
-parser.add_argument('--total_epoch', type=int, default=20, help='total epochs')
+parser.add_argument('--total_epoch', type=int, default=2, help='total epochs')
 parser.add_argument('--interval', type=int, default=1)
 
 ## BNC parameters
