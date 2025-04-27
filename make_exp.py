@@ -61,11 +61,11 @@ for ds, st in source_target.items():
                                                 outline.append(cmd)
                                             else:
                                                 print('======{} exists======'.format(outcsv))
-nn = 1# 7
+nn = 2# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
-cuda_list = [5]
+cuda_list = [4,5]
 for ii in range(nn):
     job = 'DA_{}'.format(ii)
     jobName=job + '.sh'
