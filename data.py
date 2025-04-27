@@ -13,29 +13,64 @@ assume classes across domains are the same.
 |----common classes --||----source private classes --||----target private classes --|
 '''
 
-n_share = {'office': 10,
-            'officehome': 10,
-            'visda': 6, 
-            'domainnet': 150}
+if args.target_type == 'OPDA':
+    print('OPDA')
+    n_share = {'office': 10,
+                'officehome': 10,
+                'visda': 6,
+                'domainnet': 150}
 
-n_source_private = {'office': 10,
-            'officehome': 5,
-            'visda': 3, 
-            'domainnet': 50}
+    n_source_private = {'office': 10,
+                'officehome': 5,
+                'visda': 3,
+                'domainnet': 50}
 
-n_total = {'office': 31,
-            'officehome': 65,
-            'visda': 12, 
-            'domainnet': 345}
+    n_total = {'office': 31,
+                'officehome': 65,
+                'visda': 12,
+                'domainnet': 345}
+
+elif args.target_type == 'OSDA':
+    print('OSDA')
+    n_share = {'office': 10,
+                'officehome': 25,
+                'visda': 6}
+
+    n_source_private = {'office': 0,
+                'officehome': 0,
+                'visda': 0}
+
+    n_total = {'office': 21,
+                'officehome': 65,
+                'visda': 12}
+
+elif args.target_type == 'PDA':
+    print('PDA')
+    n_share = {'office': 10,
+                'officehome': 25,
+                'visda': 6}
+
+    n_source_private = {'office': 21,
+                'officehome': 40,
+                'visda': 6}
+
+    n_total = {'office': 31,
+                'officehome': 65,
+                'visda': 12}
 
 
 data_workers = 3
 
 a, b, c = n_share[args.dataset], n_source_private[args.dataset], n_total[args.dataset]
-c = c - a - b
+c = c - a - b # common, source-private, target-private
 common_classes = [i for i in range(a)]
 source_private_classes = [i + a for i in range(b)]
-target_private_classes = [i + a + b for i in range(c)]
+
+if args.dataset == "office" and args.target_type == "OSDA":
+    target_private_classes = [i + a + b + 10 for i in range(c)]
+else:
+    target_private_classes = [i + a + b for i in range(c)]
+
 
 source_classes = common_classes + source_private_classes
 target_classes = common_classes + target_private_classes

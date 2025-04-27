@@ -36,7 +36,7 @@ else:
     # output_device = gpu_ids[0]
     #output_device = torch.device('cuda:{}'.format(args.gid))
     output_device = torch.device('cuda')
-print('==========, device, ', output_device)
+#print('==========, device, ', output_device)
 Cluster = BayesianGaussianMixtureMerge(
     n_components=args.max_k,
     n_init=5,
@@ -203,7 +203,7 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
 now = datetime.datetime.now().strftime('%b%d_%H-%M-%S')
 subdir = f'{args.balance}_{args.lr}_{args.lr_scale}_{args.interval}_{args.lambdav}_{args.max_k}_{args.KK}_{args.covariance_prior}_{args.score}_{args.classifier}'
 #log_dir = f'exp_{args.dataset}/{source_domain_name}_{target_domain_name}/{args.balance}_{args.interval}_{args.lambdav}_{args.lr}/{now}'
-log_dir = f'exp_{args.dataset}/{source_domain_name}_{target_domain_name}/{subdir}/{now}'
+log_dir = f'exp_{args.dataset}/{args.target_type}/{source_domain_name}_{target_domain_name}/{subdir}/{now}'
 logger = SummaryWriter(log_dir)
 old_stdout = sys.stdout
 log_file = open(f'{log_dir}/message.log', 'w')
@@ -284,7 +284,7 @@ with open(f'{log_dir}/output.pkl', 'wb') as file:
 
 
 best_df = pd.DataFrame([[best_metrics['epoch_id'], best_metrics['hos'], best_metrics['acc_test'], best_metrics['nmi'], best_metrics['k_acc'], best_metrics['uk_nmi']]+list(best_metrics['acc_tests'].values())] )
-outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
+outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(args.target_type, source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
                                                               args.interval, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier)
 best_df.to_csv(outcsv)
 sys.stdout = old_stdout

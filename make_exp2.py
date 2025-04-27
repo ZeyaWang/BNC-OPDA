@@ -29,8 +29,8 @@ source_target = {
                                      [3, 1], [3, 2]]
 }
 
-
-
+target_type = 'OPDA'
+target_type = 'OSDA'
 outline = []
 intervals = [1]
 #balances = [0.001, 0.01, 0.1, 1.0]
@@ -66,22 +66,23 @@ for ds, st in source_target.items():
                                     for sc in scs:
                                         for cl in clf:
                                             #CUDA_VISIBLE_DEVICES=2,3,5,6,7
-                                            cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --dataset {} --source {} --target {} --balance {} --lr {} '
-                                                   '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
+                                            cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                   '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                             if cl:
                                                 cmd += '--classifier \n'
                                             else:
                                                 cmd += '\n'
-                                            outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
+                                            outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
                                             if not os.path.isfile(outcsv):
                                                 outline.append(cmd)
                                             else:
                                                 print('======{} exists======'.format(outcsv))
 nn = 6
+nn = 4
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
-cuda_list = [0,1,2,3,6,7]
+cuda_list = [0,1,2,3]#,6,7]
 for ii in range(nn):
     job = 'UDA_{}'.format(ii)
     jobName=job + '.sh'

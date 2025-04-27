@@ -28,6 +28,7 @@ parser.add_argument('--gpus', type=int, default=1, help='number of gpus')
 # parser.add_argument('--gid', type=int, default=1, help='id of gpus')
 parser.add_argument('--bottle_neck_dim', type=int, default=256, help='bottle_neck_dim')
 parser.add_argument('--base_model', type=str, default='resnet50', help='resnet50, vgg16')
+parser.add_argument("--target_type", default="OPDA", type=str)
 
 ## training parameters
 parser.add_argument('--lr', type=float, default=0.01) # previous training based on lr*lr_scale
