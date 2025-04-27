@@ -261,7 +261,7 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
                                                               source_classes,
                                                               tgt_match)
     metrics['nmi'] = nmi_v
-    metrics['unk_nmi'] = unk_nmi
+    metrics['uk_nmi'] = unk_nmi
     metrics['k_acc'] = k_acc
     metrics['tgt_member'] = tgt_member
     metrics['tgt_predict'] = tgt_predict
