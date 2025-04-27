@@ -31,7 +31,7 @@ lr_scales = [0.1]
 max_k = 100
 lrs = [0.001]#[0.01, 0.001, 0.0005, 0.0001]
 #lrs = [0.001, 0.0005]
-KKs = [100, 200]#[5, 30, 100]
+KKs = [5, 10]#[5, 30, 100]
 #KKs = [3,5]
 covs = [0.001]#[0.01, 0.001]
 #scs = ['cos', 'entropy']
@@ -50,7 +50,7 @@ for ds, st in source_target.items():
                                     for sc in scs:
                                         for cl in clf:
                                             #CUDA_VISIBLE_DEVICES=1,3,5,7
-                                            cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --dataset {} --source {} --target {} --balance {} --lr {} '
+                                            cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --dataset {} --source {} --target {} --balance {} --lr {} '
                                                    '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                             if cl:
                                                 cmd += '--classifier \n'
