@@ -7,7 +7,7 @@ import numpy as np
 dm1 = ['Art', 'Clipart', 'Product', 'RealWorld']
 dm2 = ['amazon', 'dslr', 'webcam']
 dm3 = ['train', 'validation']
-
+ttype = 'OSDA'
 myd = defaultdict(list)
 fd = '..'
 print('===========', fd, '===========')
@@ -18,7 +18,8 @@ for f in os.listdir(fd):
         res = pd.read_csv(ff, header=None).iloc[1].tolist()
         f2 = f.replace('Real_World', 'RealWorld')
         #print(f2)
-        _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
+        # _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_') # old version
+        _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
         if (res[1] < 1) and (res[1] > 0):
             hos, acc_test, nmi, k_acc, uk_nmi = res[1:6]
             epoch = None
@@ -27,7 +28,8 @@ for f in os.listdir(fd):
             epoch = int(res[1])
         #if lam not in ['0.1','1.0'] and interval != '10':
         #myd[(lam, lam2, interval)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
-        if (balance == '0.01'):# and (KK != '5'):
+        #if (balance == '0.01'):# and (KK != '5'):
+        if domain == ttype:
             myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
 
 for k in myd:
