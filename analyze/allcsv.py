@@ -19,7 +19,7 @@ for f in os.listdir(fd):
         f2 = f.replace('Real_World', 'RealWorld')
         #print(f2)
         # _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_') # old version
-        _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
+        _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf, bs = f2[:-4].split('_')
         if (res[1] < 1) and (res[1] > 0):
             hos, acc_test, nmi, k_acc, uk_nmi = res[1:6]
             epoch = None
@@ -30,7 +30,7 @@ for f in os.listdir(fd):
         #myd[(lam, lam2, interval)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
         #if (balance == '0.01'):# and (KK != '5'):
         if domain == ttype:
-            myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
+            myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf, bs)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
 
 for k in myd:
     myd[k].sort()
