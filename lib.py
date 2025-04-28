@@ -226,7 +226,7 @@ vectorized_map = np.vectorize(map_values)
 
 
 
-def valid(t_centers , Net, target_test_dl, output_device, source_classes, tgt_match):
+def valid(t_centers , Net, target_test_dl, output_device, source_classes, tgt_match, ttype='OPDA'):
     tgt_member, tgt_predict = [], []
     Net.eval()
     for i, (im_target, label_target) in enumerate(target_test_dl):
@@ -239,20 +239,26 @@ def valid(t_centers , Net, target_test_dl, output_device, source_classes, tgt_ma
     tgt_member = np.concatenate(tgt_member, axis=0)
     tgt_predict = np.concatenate(tgt_predict, axis=0)
     tgt_predict = vectorized_map(tgt_predict, tgt_match)
-    merge_perf(tgt_member, tgt_predict, ncls=len(source_classes))
-    counters, unknown_test_truth, unknown_test_pred, known_test_truth, known_test_pred, acc_tests = report(tgt_predict, tgt_member, source_classes)
-    acc_test = np.round(np.mean(list(acc_tests.values())), 3)
-    acc_testv = np.array(list(acc_tests.values()))
-    kn_acc = np.mean(acc_testv[:-1])
-    unk_acc = acc_testv[-1]
-    hos = 2 * (kn_acc * unk_acc) / (kn_acc + unk_acc)
-    nmi_v = nmi(tgt_member,tgt_predict)
-    unk_nmi = nmi(unknown_test_truth, unknown_test_pred)
-    k_acc = np.sum(np.array(known_test_truth) == np.array(known_test_pred)) / len(known_test_truth)
-    print(
-        '*********evaluate performance********** acc_tests: {}, acc_test: {}, hos: {}, nmi: {}, unk_nmi: {}, k_acc: {}'.format(acc_tests, acc_test, hos, nmi_v, unk_nmi, k_acc))
     Net.train()
-    return counters, unknown_test_truth, unknown_test_pred, acc_tests, acc_test, hos, nmi_v, unk_nmi, k_acc, tgt_member, tgt_predict
+    if ttype == 'PDA':
+        k_acc = merge_perf_pda(tgt_member, tgt_predict)
+        print(
+            '*********evaluate performance********** k_acc: {}'.format(k_acc))
+        return k_acc, tgt_member, tgt_predict
+    else:
+        merge_perf(tgt_member, tgt_predict, ncls=len(source_classes))
+        counters, unknown_test_truth, unknown_test_pred, known_test_truth, known_test_pred, acc_tests = report(tgt_predict, tgt_member, source_classes)
+        acc_test = np.round(np.mean(list(acc_tests.values())), 3)
+        acc_testv = np.array(list(acc_tests.values()))
+        kn_acc = np.mean(acc_testv[:-1])
+        unk_acc = acc_testv[-1]
+        hos = 2 * (kn_acc * unk_acc) / (kn_acc + unk_acc)
+        nmi_v = nmi(tgt_member,tgt_predict)
+        unk_nmi = nmi(unknown_test_truth, unknown_test_pred)
+        k_acc = np.sum(np.array(known_test_truth) == np.array(known_test_pred)) / len(known_test_truth)
+        print(
+            '*********evaluate performance********** acc_tests: {}, acc_test: {}, hos: {}, nmi: {}, unk_nmi: {}, k_acc: {}'.format(acc_tests, acc_test, hos, nmi_v, unk_nmi, k_acc))
+        return counters, unknown_test_truth, unknown_test_pred, acc_tests, acc_test, hos, nmi_v, unk_nmi, k_acc, tgt_member, tgt_predict
 
 def gen_cluster_input(Net, target_test_dl, output_device):
     tgt_embedding, tgt_member = [], []
@@ -363,6 +369,10 @@ def merge_perf(tgt_member, tgt_member_new, ncls):
     prec = TP / (TP + FP)
     print('precision is', prec, TP, TP + FP)
     return nmi_v, k_acc, uk_nmi, rec, prec
+
+def merge_perf_pda(tgt_member, tgt_member_new):
+    return np.sum(tgt_member == tgt_member_new) / len(tgt_member)
+
 
 
 

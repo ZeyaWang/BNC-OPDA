@@ -108,10 +108,14 @@ def detect(totalNet, thresh=0.5, score='cos'):
 
 
 
-def clustering(tgt_embedding, tgt_member, predict_src):
+def clustering(tgt_embedding, tgt_member, predict_src, ttype='OPDA'):
     tgt_predict = merge_cluster(Cluster, tgt_embedding, tgt_member, predict_src, plot=False, num_src_cls=num_src_cls)
-    nmi_v, k_acc, uk_nmi, rec, prec = merge_perf(tgt_member, tgt_predict, ncls=num_src_cls)
-    metrics = {'cl_nmi': nmi_v.item(), 'cl_k_acc': k_acc.item(), 'cl_uk_nmi': uk_nmi.item(), 'cl_rec': rec.item(), 'cl_prec': prec.item()}
+    if ttype != 'PDA':
+        nmi_v, k_acc, uk_nmi, rec, prec = merge_perf(tgt_member, tgt_predict, ncls=num_src_cls)
+        metrics = {'cl_nmi': nmi_v.item(), 'cl_k_acc': k_acc.item(), 'cl_uk_nmi': uk_nmi.item(), 'cl_rec': rec.item(), 'cl_prec': prec.item()}
+    else:
+        k_acc = merge_perf_pda(tgt_member, tgt_predict)
+        metrics = {'cl_k_acc': k_acc.item()}
     return tgt_predict, metrics
 
 def generate_memory(tgt_predict, embedding):
@@ -225,7 +229,7 @@ optSets = OptSets(totalNet, args.lr, args.total_epoch * len(target_train_dl) * a
 global_step = 0
 
 metrics_epoch = {}
-best_hos = 0.
+best_hos, best_acc = 0., 0.
 if args.dataset != 'visda':
     threshs = [0.4, 0.45, 0.5, 0.55, 0.6]
 else:
@@ -240,7 +244,7 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
             continue
         if it == 0:
             tgt_embedding, tgt_member = gen_cluster_input(totalNet, target_test_dl, output_device)
-        tgt_predict, metrics = clustering(tgt_embedding, tgt_member, predict_y)
+        tgt_predict, metrics = clustering(tgt_embedding, tgt_member, predict_y, args.target_type)
 
         sil = silhouette_score(tgt_embedding, tgt_predict)
         d_result[sil] = (t, tgt_predict, metrics)
@@ -253,31 +257,54 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
     target_train_ds.labels = list(zip([i for i in range(len(target_train_ds.datas))], tgt_predict_post))
     target_train_dl = DataLoader(dataset=target_train_ds, batch_size=args.batch_size, shuffle=True,
                                  num_workers=data_workers, drop_last=True)
-    (counters, unknown_test_truth, unknown_test_pred, acc_tests, acc_test, hos,
-    nmi_v, unk_nmi, k_acc, tgt_member, tgt_predict) = valid(memory.memory,
-                                                              totalNet,
-                                                              target_test_dl,
-                                                              output_device,
-                                                              source_classes,
-                                                              tgt_match)
-    metrics['nmi'] = nmi_v
-    metrics['uk_nmi'] = unk_nmi
+    if args.target_type == 'PDA':
+        k_acc, tgt_member, tgt_predict = valid(memory.memory,
+                                                  totalNet,
+                                                  target_test_dl,
+                                                  output_device,
+                                                  source_classes,
+                                                  tgt_match, args.target_type)
+        metrics['nmi'] = 0
+        metrics['uk_nmi'] = 0
+        metrics['hos'] = 0
+        metrics['acc_tests'] = {0:0}
+        metrics['acc_test'] = 0
+    else:
+        (counters, unknown_test_truth, unknown_test_pred, acc_tests, acc_test, hos,
+        nmi_v, unk_nmi, k_acc, tgt_member, tgt_predict) = valid(memory.memory,
+                                                                  totalNet,
+                                                                  target_test_dl,
+                                                                  output_device,
+                                                                  source_classes,
+                                                                  tgt_match, args.target_type)
+        metrics['nmi'] = nmi_v
+        metrics['uk_nmi'] = unk_nmi
+        metrics['hos'] = hos.item()
+        metrics['acc_tests'] = acc_tests
+        metrics['acc_test'] = acc_test.item()
+
     metrics['k_acc'] = k_acc
     metrics['tgt_member'] = tgt_member
     metrics['tgt_predict'] = tgt_predict
-    metrics['hos'] = hos.item()
-    metrics['acc_tests'] = acc_tests
-    metrics['acc_test'] = acc_test.item()
     metrics['epoch_id'] = epoch_id
-    if hos > best_hos:
-        best_hos = hos
-        best_metrics = metrics
+
+
     global_step, closs_total_t, mloss_total_t, loss_total_t = train(totalNet, target_train_ds, memory, optSets, epoch_id, global_step, args.total_epoch, args.classifier)
+
     metrics['global_step'] = global_step
     metrics['closs_total'] = closs_total_t
     metrics['mloss_total'] = mloss_total_t
     metrics['loss_total'] = loss_total_t
     metrics_epoch[epoch_id] = metrics
+
+    if args.target_type == 'PDA':
+        if k_acc > best_acc:
+            best_acc = k_acc
+            best_metrics = metrics
+    else:
+        if hos > best_hos:
+            best_hos = hos
+            best_metrics = metrics
 
 with open(f'{log_dir}/output.pkl', 'wb') as file:
     pk.dump([metrics_epoch, best_metrics], file)
