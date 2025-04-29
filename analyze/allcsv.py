@@ -7,7 +7,7 @@ import numpy as np
 dm1 = ['Art', 'Clipart', 'Product', 'RealWorld']
 dm2 = ['amazon', 'dslr', 'webcam']
 dm3 = ['train', 'validation']
-ttype = 'OSDA'
+ttype = 'OPDA'
 myd = defaultdict(list)
 fd = '..'
 print('===========', fd, '===========')
