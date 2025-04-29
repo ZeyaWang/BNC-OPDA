@@ -179,6 +179,20 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
             )
             # neg_pred = pairwise_kl_divergence(softmax_out)
             # closs -= neg_pred * args.lambdav
+            ########## extra##########
+            alpha = (1 + 10 * i / len(iters)) ** (-5.0) * 5.0
+            mask = torch.ones((im.shape[0], im.shape[0]))
+            diag_num = torch.diag(mask)
+            mask_diag = torch.diag_embed(diag_num)
+            mask = mask - mask_diag
+            copy = softmax_out.T  # .detach().clone()#
+
+            dot_neg = softmax_out @ copy  # batch x batch
+
+            dot_neg = (dot_neg * mask.cuda()).sum(-1)  # batch
+            neg_pred = torch.mean(dot_neg)
+            closs += neg_pred * alpha
+            ########
 
 
             mloss = memory.forward(feature, plabel)

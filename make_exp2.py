@@ -24,13 +24,13 @@ domain = {'office': ['amazon', 'dslr', 'webcam'],
 #     'visda': [[0,1]]
 # }
 source_target = {
-    'office': [[0,1],[0,2],[1,2],[2,1],[1,0],[2,0]],
+    #'office': [[0,1],[0,2],[1,2],[2,1],[1,0],[2,0]],
     'officehome': [[0, 1], [0, 2], [0, 3], [1, 0], [1, 2], [1, 3], [2, 0], [2, 1], [2, 3], [3, 0],
                                      [3, 1], [3, 2]]
 }
 
 target_type = 'OPDA'
-target_type = 'PDA'
+#target_type = 'PDA'
 #target_type = 'OSDA'
 outline = []
 intervals = [1]
