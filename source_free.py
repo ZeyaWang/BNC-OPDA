@@ -18,7 +18,7 @@ import yaml
 from sklearn.metrics.pairwise import cosine_similarity
 import torch.nn.functional as F
 import pickle as pk
-
+import math
 
 cudnn.benchmark = True
 cudnn.deterministic = True
@@ -156,7 +156,10 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
     for t in range(args.interval):
         iters = tqdm(loader, desc=f'epoch {epoch_step} args.interval {t} ', total=len(loader))
         mloss_total, closs_total, loss_total =  0., 0., 0.
+        half_length = math.ceil(len(loader) / 5)  # use ceil if you want to include the middle item in odd-length case
         for i, (im, (idx, plabel)) in enumerate(iters):
+            if i >= half_length:
+                break
             idx = idx.to(output_device)  # pseudolabel with a value between 0 and 1
             plabel = plabel.to(output_device)
             im = im.to(output_device)
@@ -180,18 +183,18 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
             # neg_pred = pairwise_kl_divergence(softmax_out)
             # closs -= neg_pred * args.lambdav
             ########## extra##########
-            alpha = (1 + 10 * i / len(iters)) ** (-5.0) * 5.0
-            mask = torch.ones((im.shape[0], im.shape[0]))
-            diag_num = torch.diag(mask)
-            mask_diag = torch.diag_embed(diag_num)
-            mask = mask - mask_diag
-            copy = softmax_out.T  # .detach().clone()#
-
-            dot_neg = softmax_out @ copy  # batch x batch
-
-            dot_neg = (dot_neg * mask.cuda()).sum(-1)  # batch
-            neg_pred = torch.mean(dot_neg)
-            closs += neg_pred * alpha
+            # alpha = (1 + 10 * i / len(iters)) ** (-5.0) * 5.0
+            # mask = torch.ones((im.shape[0], im.shape[0]))
+            # diag_num = torch.diag(mask)
+            # mask_diag = torch.diag_embed(diag_num)
+            # mask = mask - mask_diag
+            # copy = softmax_out.T  # .detach().clone()#
+            #
+            # dot_neg = softmax_out @ copy  # batch x batch
+            #
+            # dot_neg = (dot_neg * mask.cuda()).sum(-1)  # batch
+            # neg_pred = torch.mean(dot_neg)
+            # closs += neg_pred * alpha
             ########
 
 
