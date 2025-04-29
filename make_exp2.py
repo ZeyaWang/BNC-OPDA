@@ -30,6 +30,7 @@ source_target = {
 }
 
 target_type = 'OPDA'
+target_type = 'PDA'
 #target_type = 'OSDA'
 outline = []
 intervals = [1]
@@ -50,10 +51,11 @@ scs = ['cos']
 clf = [True]
 for ds, st in source_target.items():
     if ds == 'office':
-        lrs = [0.01, 0.1]
-        KKs = [5]
+        #lrs = [0.01, 0.1]
+        lrs = [0.01]
+        #KKs = [5]
     elif ds == 'officehome':
-        lrs = [0.001, 0.0001]
+        #lrs = [0.001, 0.0001]
         lrs = [0.0001]
     for src, tar in st:
         for interval in intervals:
