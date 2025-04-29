@@ -12,6 +12,7 @@ subff = open('submit.py','w')
 subff.write('import os\n')
 
 target_type = 'OSDA'
+target_type = 'PDA'
 
 domain = {'visda': ['train', 'validation']}
 
