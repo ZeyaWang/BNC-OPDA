@@ -8,8 +8,10 @@ dm1 = ['Art', 'Clipart', 'Product', 'RealWorld']
 dm2 = ['amazon', 'dslr', 'webcam']
 dm3 = ['train', 'validation']
 ttype = 'OSDA'
+ttype = 'PDA'
 myd = defaultdict(list)
 fd = '../exp_log_Apr28'
+fd = '..'
 print('===========', fd, '===========')
 for f in os.listdir(fd):
     if f.endswith('.csv'):
