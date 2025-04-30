@@ -159,6 +159,7 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
         half_length = math.ceil(len(loader) / args.iter_factor)  # use ceil if you want to include the middle item in odd-length case
         for i, (im, (idx, plabel)) in enumerate(iters):
             if i > half_length:
+                print('======break at=====', i, len(loader))
                 break
             idx = idx.to(output_device)  # pseudolabel with a value between 0 and 1
             plabel = plabel.to(output_device)
