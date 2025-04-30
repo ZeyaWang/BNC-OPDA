@@ -9,7 +9,7 @@ dm2 = ['amazon', 'dslr', 'webcam']
 dm3 = ['train', 'validation']
 ttype = 'PDA'
 ttype = 'OPDA'
-#ttype = 'OSDA'
+ttype = 'OSDA'
 
 myd = defaultdict(list)
 fd = '../exp_log_Apr29'
