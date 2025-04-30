@@ -156,9 +156,9 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
     for t in range(args.interval):
         iters = tqdm(loader, desc=f'epoch {epoch_step} args.interval {t} ', total=len(loader))
         mloss_total, closs_total, loss_total =  0., 0., 0.
-        half_length = math.ceil(len(loader) / 5)  # use ceil if you want to include the middle item in odd-length case
+        half_length = math.ceil(len(loader) / args.iter_factor)  # use ceil if you want to include the middle item in odd-length case
         for i, (im, (idx, plabel)) in enumerate(iters):
-            if i >= half_length:
+            if i > half_length:
                 break
             idx = idx.to(output_device)  # pseudolabel with a value between 0 and 1
             plabel = plabel.to(output_device)
@@ -331,8 +331,10 @@ with open(f'{log_dir}/output.pkl', 'wb') as file:
 
 
 best_df = pd.DataFrame([[best_metrics['epoch_id'], best_metrics['hos'], best_metrics['acc_test'], best_metrics['nmi'], best_metrics['k_acc'], best_metrics['uk_nmi']]+list(best_metrics['acc_tests'].values())] )
+# outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(args.target_type, source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
+#                                                               args.interval, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier, args.batch_size)
 outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(args.target_type, source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
-                                                              args.interval, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier, args.batch_size)
+                                                              args.iter_factor, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier, args.batch_size)
 best_df.to_csv(outcsv)
 sys.stdout = old_stdout
 log_file.close()

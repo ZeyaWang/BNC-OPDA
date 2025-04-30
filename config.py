@@ -37,6 +37,7 @@ parser.add_argument('--weight_decay', type=float, default=0.001)
 parser.add_argument('--momentum', type=float, default=0.9)
 parser.add_argument('--total_epoch', type=int, default=20, help='total epochs')
 parser.add_argument('--interval', type=int, default=1)
+parser.add_argument('--iter_factor', type=int, default=1)
 
 ## BNC parameters
 parser.add_argument('--max_k', type=int, default=100)

@@ -13,6 +13,7 @@ subff.write('import os\n')
 
 target_type = 'OSDA'
 target_type = 'PDA'
+target_type = 'OPDA'
 
 domain = {'visda': ['train', 'validation']}
 
@@ -20,7 +21,8 @@ source_target = {
     'visda': [[0,1]]
 }
 outline = []
-intervals = [1]
+#intervals = [1]
+intervals = [5, 10]
 #balances = [0.001, 0.01, 0.1, 1.0]
 #balances = [0.001, 0.01]
 lambdavs = [0.0]
@@ -34,7 +36,8 @@ max_k = 100
 lrs = [0.001]#[0.01, 0.001, 0.0005, 0.0001]
 #lrs = [0.001, 0.0005]
 #KKs = [5, 10]#[5, 30, 100]
-KKs = [50, 100]
+#KKs = [50, 100]
+KKs = [50]
 #KKs = [3,5]
 covs = [0.001]#[0.01, 0.001]
 #scs = ['cos', 'entropy']
@@ -53,8 +56,8 @@ for ds, st in source_target.items():
                                     for sc in scs:
                                         for cl in clf:
                                             #CUDA_VISIBLE_DEVICES=1,3,5,7
-                                            cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
-                                                   '--lr_scale {} --interval {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
+                                            cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 50 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                   '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                             if cl:
                                                 cmd += '--classifier \n'
                                             else:
@@ -68,7 +71,8 @@ nn = 2# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
-cuda_list = [4,5]
+#cuda_list = [4,5]
+cuda_list = [6,7]
 for ii in range(nn):
     job = 'DA_{}'.format(ii)
     jobName=job + '.sh'
