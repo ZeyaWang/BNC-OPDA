@@ -12,8 +12,8 @@ subff = open('submit.py','w')
 subff.write('import os\n')
 
 target_type = 'OSDA'
-target_type = 'PDA'
-target_type = 'OPDA'
+# target_type = 'PDA'
+# target_type = 'OPDA'
 
 domain = {'visda': ['train', 'validation']}
 
@@ -73,6 +73,7 @@ for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
 #cuda_list = [4,5]
 cuda_list = [6,7]
+cuda_list = [0,2]
 for ii in range(nn):
     job = 'DA_{}'.format(ii)
     jobName=job + '.sh'
