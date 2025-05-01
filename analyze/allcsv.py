@@ -89,7 +89,7 @@ for f in os.listdir(fd):
         # print(f)
         ff = os.path.join(fd, f)
         res = pd.read_csv(ff, header=None).iloc[1].tolist()
-        print(res)
+        #print(res)
         f2 = f.replace('Real_World', 'RealWorld')
         # print(f2)
         # _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_') # old version
@@ -120,7 +120,7 @@ for f in os.listdir(fd):
 
 for k in myd:
     myd[k].sort()
-# print(myd)
+print(myd)
 
 np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
 for k in myd:
