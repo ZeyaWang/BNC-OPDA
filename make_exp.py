@@ -11,7 +11,7 @@ def get_files_with_substring_and_suffix(directory, substring, suffix):
 subff = open('submit.py','w')
 subff.write('import os\n')
 
-target_type = 'OSDA'
+target_type = 'OPDA'
 # target_type = 'PDA'
 # target_type = 'OPDA'
 
@@ -21,8 +21,8 @@ source_target = {
     'visda': [[0,1]]
 }
 outline = []
-#intervals = [1]
-intervals = [5, 10]
+intervals = [1]
+#intervals = [5, 10]
 #balances = [0.001, 0.01, 0.1, 1.0]
 #balances = [0.001, 0.01]
 lambdavs = [0.0]
@@ -34,6 +34,7 @@ lr_scales = [0.1]
 # lr_scales = [0.01, 0.1]
 max_k = 100
 lrs = [0.001]#[0.01, 0.001, 0.0005, 0.0001]
+lrs = [0.00001, 0.000001]
 #lrs = [0.001, 0.0005]
 #KKs = [5, 10]#[5, 30, 100]
 #KKs = [50, 100]
@@ -56,7 +57,7 @@ for ds, st in source_target.items():
                                     for sc in scs:
                                         for cl in clf:
                                             #CUDA_VISIBLE_DEVICES=1,3,5,7
-                                            cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 50 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
+                                            cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 30 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
                                                    '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                             if cl:
                                                 cmd += '--classifier \n'
