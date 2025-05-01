@@ -83,7 +83,7 @@ cuda_list = [6,7]
 cuda_list = [1,3]
 cuda_list = [5]
 for ii in range(nn):
-    job = 'DA_{}'.format(ii)
+    job = 'DAI_{}'.format(ii)
     jobName=job + '.sh'
     outf = open(jobName,'w')
     outf.write('#!/bin/bash\n')
