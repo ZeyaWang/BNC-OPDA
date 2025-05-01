@@ -134,6 +134,9 @@ for k in myd:
     dd1 = ddd[ddd[0].isin(dm1)]
     dd2 = ddd[ddd[0].isin(dm2)]
     dd3 = ddd[ddd[0].isin(dm3)]
+    print(dd1)
+    print(dd2)
+    print(dd3)
     dd1['task'] = dd1[0].astype(str) + '_' + dd1[1].astype(str)
     dd1 = dd1.drop(columns=[0, 1])
     dd2['task'] = dd2[0].astype(str) + '_' + dd2[1].astype(str)
