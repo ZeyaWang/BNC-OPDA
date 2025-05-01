@@ -109,6 +109,9 @@ def detect(totalNet, thresh=0.5, score='cos'):
 
 
 def clustering(tgt_embedding, tgt_member, predict_src, ttype='OPDA'):
+    #report before perfomance
+    print('========= before clustering ==========')
+    merge_perf(tgt_member, predict_src, ncls=num_src_cls)
     tgt_predict = merge_cluster(Cluster, tgt_embedding, tgt_member, predict_src, plot=False, num_src_cls=num_src_cls)
     if ttype != 'PDA':
         nmi_v, k_acc, uk_nmi, rec, prec = merge_perf(tgt_member, tgt_predict, ncls=num_src_cls)

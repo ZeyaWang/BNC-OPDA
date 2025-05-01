@@ -257,7 +257,7 @@ def valid(t_centers , Net, target_test_dl, output_device, source_classes, tgt_ma
         unk_nmi = nmi(unknown_test_truth, unknown_test_pred)
         k_acc = np.sum(np.array(known_test_truth) == np.array(known_test_pred)) / len(known_test_truth)
         print(
-            '*********evaluate performance********** acc_tests: {}, acc_test: {}, hos: {}, nmi: {}, unk_nmi: {}, k_acc: {}'.format(acc_tests, acc_test, hos, nmi_v, unk_nmi, k_acc))
+            '*********evaluate performance********** acc_tests: {}, acc_test: {}, final_hos: {}, nmi: {}, unk_nmi: {}, k_acc: {}'.format(acc_tests, acc_test, hos, nmi_v, unk_nmi, k_acc))
         return counters, unknown_test_truth, unknown_test_pred, acc_tests, acc_test, hos, nmi_v, unk_nmi, k_acc, tgt_member, tgt_predict
 
 def gen_cluster_input(Net, target_test_dl, output_device):
@@ -345,12 +345,19 @@ def merge_perf(tgt_member, tgt_member_new, ncls):
     #print('=====nmi========', nmi_v)#, tgt_member_new, tgt_member, tgt_member_new.shape, tgt_member.shape)
     k_acc = np.sum(tar_label_known == tgt_member_new_known) / np.sum(tgt_member < ncls)
     k_acc_total = {}
+    k_num_total = {}
+    k_pos_total = {}
     for c in np.unique(tar_label_known):
         tr = tar_label_known[tar_label_known==c]
         es = tgt_member_new_known[tar_label_known==c]
         pacc = np.sum(tr==es) / len(tr)
         k_acc_total[c] = pacc
+        k_num_total[c] = len(tr)
+        k_pos_total[c] = np.sum(tr==es)
+
     print(k_acc_total)
+    print(k_num_total)
+    print(k_pos_total)
     known_acc = np.array(list(k_acc_total.values())).mean()
     unknown_acc = np.sum(tgt_member_new_unknown > ncls-1) / len(tgt_member_new_unknown)
     h_score = 2 * known_acc * unknown_acc / (known_acc + unknown_acc + 1e-5)
