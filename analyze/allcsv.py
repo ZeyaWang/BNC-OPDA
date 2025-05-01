@@ -49,7 +49,7 @@ for f in os.listdir(fd):
 
 for k in myd:
     myd[k].sort()
-#print(myd)
+print(myd)
 
 np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
 for k in myd:
