@@ -334,8 +334,8 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
 with open(f'{log_dir}/output.pkl', 'wb') as file:
     pk.dump([metrics_epoch, best_metrics], file)
 
-mid_metrics = metrics[4]
-final_metrics = metrics[9]
+mid_metrics = metrics_epoch[4]
+final_metrics = metrics_epoch[9]
 best_df = pd.DataFrame([
                         [best_metrics['epoch_id'], best_metrics['hos'], best_metrics['acc_test'], best_metrics['nmi'], best_metrics['k_acc'], best_metrics['uk_nmi']]+list(best_metrics['acc_tests'].values()),
                         [mid_metrics['epoch_id'], mid_metrics['hos'], mid_metrics['acc_test'], mid_metrics['nmi'], mid_metrics['k_acc'], mid_metrics['uk_nmi']]+list(mid_metrics['acc_tests'].values()),
