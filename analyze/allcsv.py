@@ -49,7 +49,7 @@ for f in os.listdir(fd):
 
 for k in myd:
     myd[k].sort()
-print(myd)
+#print(myd)
 
 np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
 for k in myd:
@@ -88,12 +88,12 @@ for f in os.listdir(fd):
     if f.endswith('.csv'):
         # print(f)
         ff = os.path.join(fd, f)
-        res = pd.read_csv(ff, header=None).iloc[1].tolist()
+        res = pd.read_csv(ff, header=None).iloc[2].tolist()
         #print(res)
         f2 = f.replace('Real_World', 'RealWorld')
         # print(f2)
         # _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_') # old version
-        if (res[1] < 1) and (res[2] > 0):
+        if (res[1] < 1) and (res[1] > 0):
             hos, acc_test, nmi, k_acc, uk_nmi = res[1:6]
             epoch = None
         else:
@@ -120,7 +120,7 @@ for f in os.listdir(fd):
 
 for k in myd:
     myd[k].sort()
-print(myd)
+#print(myd)
 
 np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
 for k in myd:
@@ -134,9 +134,9 @@ for k in myd:
     dd1 = ddd[ddd[0].isin(dm1)]
     dd2 = ddd[ddd[0].isin(dm2)]
     dd3 = ddd[ddd[0].isin(dm3)]
-    print(dd1)
-    print(dd2)
-    print(dd3)
+    # print(dd1)
+    # print(dd2)
+    # print(dd3)
     dd1['task'] = dd1[0].astype(str) + '_' + dd1[1].astype(str)
     dd1 = dd1.drop(columns=[0, 1])
     dd2['task'] = dd2[0].astype(str) + '_' + dd2[1].astype(str)
@@ -162,7 +162,7 @@ for f in os.listdir(fd):
     if f.endswith('.csv'):
         # print(f)
         ff = os.path.join(fd, f)
-        res = pd.read_csv(ff, header=None).iloc[2].tolist()
+        res = pd.read_csv(ff, header=None).iloc[3].tolist()
         f2 = f.replace('Real_World', 'RealWorld')
         # print(f2)
         # _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_') # old version
