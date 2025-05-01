@@ -201,6 +201,7 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
 
             mloss = memory.forward(feature, plabel)
             #mloss = mloss * ExpWeight(global_step, max_iter=total_step*len(loader)*args.interval)
+            mloss = mloss * 0.1
             loss = args.balance*closs  + mloss
             #print('==============', closs.item())
             closs_total += closs.item()
@@ -330,8 +331,13 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
 with open(f'{log_dir}/output.pkl', 'wb') as file:
     pk.dump([metrics_epoch, best_metrics], file)
 
-
-best_df = pd.DataFrame([[best_metrics['epoch_id'], best_metrics['hos'], best_metrics['acc_test'], best_metrics['nmi'], best_metrics['k_acc'], best_metrics['uk_nmi']]+list(best_metrics['acc_tests'].values())] )
+mid_metrics = metrics[4]
+final_metrics = metrics[9]
+best_df = pd.DataFrame([
+                        [best_metrics['epoch_id'], best_metrics['hos'], best_metrics['acc_test'], best_metrics['nmi'], best_metrics['k_acc'], best_metrics['uk_nmi']]+list(best_metrics['acc_tests'].values()),
+                        [mid_metrics['epoch_id'], mid_metrics['hos'], mid_metrics['acc_test'], mid_metrics['nmi'], mid_metrics['k_acc'], mid_metrics['uk_nmi']]+list(mid_metrics['acc_tests'].values()),
+                        [final_metrics['epoch_id'], final_metrics['hos'], final_metrics['acc_test'], final_metrics['nmi'], final_metrics['k_acc'], final_metrics['uk_nmi']]+list(final_metrics['acc_tests'].values())
+                        ])
 # outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(args.target_type, source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
 #                                                               args.interval, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier, args.batch_size)
 outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(args.target_type, source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
