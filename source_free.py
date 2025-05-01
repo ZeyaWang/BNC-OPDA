@@ -200,7 +200,7 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
 
 
             mloss = memory.forward(feature, plabel)
-            mloss = mloss * ExpWeight(global_step, max_iter=total_step*len(loader)*args.interval)
+            #mloss = mloss * ExpWeight(global_step, max_iter=total_step*len(loader)*args.interval)
             loss = args.balance*closs  + mloss
             #print('==============', closs.item())
             closs_total += closs.item()
