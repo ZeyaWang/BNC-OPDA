@@ -54,7 +54,7 @@ for f in os.listdir(fd):
 
 for k in myd:
     myd[k].sort()
-#print(myd)
+print(myd)
 
 np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
 for k in myd:
@@ -85,8 +85,6 @@ for k in myd:
     ddd = ddd.rename(columns={2: 'hos',3: 'acc',4: 'nmi',5: 'known acc',6: 'unknown nmi', 7: 'epoch'})
     print(k)
     print(ddd)  
-
-exit()
 ########################################################################################################################
 epoch = [4,9]
 
