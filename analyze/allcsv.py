@@ -88,7 +88,7 @@ for f in os.listdir(fd):
     if f.endswith('.csv'):
         # print(f)
         ff = os.path.join(fd, f)
-        res = pd.read_csv(ff, header=None).iloc[2].tolist()
+        res = pd.read_csv(ff, header=None).iloc[5].tolist()
         #print(res)
         f2 = f.replace('Real_World', 'RealWorld')
         # print(f2)
@@ -162,7 +162,7 @@ for f in os.listdir(fd):
     if f.endswith('.csv'):
         # print(f)
         ff = os.path.join(fd, f)
-        res = pd.read_csv(ff, header=None).iloc[3].tolist()
+        res = pd.read_csv(ff, header=None).iloc[10].tolist()
         f2 = f.replace('Real_World', 'RealWorld')
         # print(f2)
         # _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_') # old version

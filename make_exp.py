@@ -43,6 +43,7 @@ KKs = [50]
 #KKs = [3,5]
 covs = [0.001]#[0.01, 0.001]
 covs = [0.0001]#[0.01, 0.001]
+covs = [0.01]#[0.01, 0.001]
 #scs = ['cos', 'entropy']
 scs = ['cos']
 clf = [False, True] # [False, True]
@@ -81,7 +82,7 @@ for i, element in enumerate(outline):
 #cuda_list = [4,5]
 cuda_list = [6,7]
 cuda_list = [1,3]
-cuda_list = [5]
+cuda_list = [1]
 for ii in range(nn):
     job = 'DAI_{}'.format(ii)
     jobName=job + '.sh'
