@@ -218,7 +218,7 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
                     #[optSets.optimizer_extractor, optSets.optimizer_bottleneck, optSets.optimizer_classifier]):
                 loss.backward()
             global_step += 1
-        tqdm.write(f'EPOCH {epoch_step:03d}: args.interval {t:03d}, closs={closs_total:.4f}, mloss={mloss_total:.4f}, loss={loss_total:.4f}')
+        tqdm.write(f'EPOCH {epoch_step:03d}: STEP {global_step:03d}: args.interval {t:03d}, closs={closs_total:.4f}, mloss={mloss_total:.4f}, loss={loss_total:.4f}')
         closs_total_t.append(closs_total)
         mloss_total_t.append(mloss_total)
         loss_total_t.append(loss_total)
