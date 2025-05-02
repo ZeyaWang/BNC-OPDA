@@ -37,6 +37,11 @@ for f in os.listdir(fd):
             if domain == ttype:
                 myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf, bs)].append(
                     [src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
+        elif len(f2[:-4].split('_')) == 16:
+            _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf, bs, dt = f2[:-4].split('_')
+            if domain == ttype:
+                myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf, bs, dt)].append(
+                    [src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
         elif len(f2[:-4].split('_')) == 14:
             _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
             if domain == ttype:
@@ -81,6 +86,7 @@ for k in myd:
     print(k)
     print(ddd)  
 
+exit()
 ########################################################################################################################
 print('========== middle results ===========')
 myd = defaultdict(list)
