@@ -226,7 +226,7 @@ class SimpleNet(nn.Module):
         f = self.feature_extractor(x)
         #f, _, __, y = self.classifier(f)
         emb = self.bottle_neck(f)
-        y = self.classifier(emb.detach())
+        y = self.classifier(emb)
         return f, emb, y
 
     def train(self):

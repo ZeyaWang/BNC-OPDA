@@ -24,7 +24,7 @@ domain = {'office': ['amazon', 'dslr', 'webcam'],
 #     'visda': [[0,1]]
 # }
 source_target = {
-    #'office': [[0,1],[0,2],[1,2],[2,1],[1,0],[2,0]],
+    'office': [[0,1],[0,2],[1,2],[2,1],[1,0],[2,0]],
     'officehome': [[0, 1], [0, 2], [0, 3], [1, 0], [1, 2], [1, 3], [2, 0], [2, 1], [2, 3], [3, 0],
                                      [3, 1], [3, 2]]
 }
@@ -50,43 +50,46 @@ covs = [0.001]#[0.01, 0.001]
 scs = ['cos']
 #clf = [False, True] # [False, True]
 clf = [True]
-for ds, st in source_target.items():
-    if ds == 'office':
-        #lrs = [0.01, 0.1]
-        lrs = [0.01]
-        #KKs = [5]
-    elif ds == 'officehome':
-        #lrs = [0.001, 0.0001]
-        lrs = [0.0001]
-    for src, tar in st:
-        for interval in intervals:
-            for balance in balances:
-                for lambdav in lambdavs:
-                    for lr in lrs:
-                        for lr_scale in lr_scales:
-                            for KK in KKs:
-                                for cov in covs:
-                                    for sc in scs:
-                                        for cl in clf:
-                                            #CUDA_VISIBLE_DEVICES=2,3,5,6,7
-                                            cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --batch_size 64 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
-                                                   '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
-                                            if cl:
-                                                cmd += '--classifier \n'
-                                            else:
-                                                cmd += '\n'
-                                            outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
-                                            if not os.path.isfile(outcsv):
-                                                outline.append(cmd)
-                                            else:
-                                                print('======{} exists======'.format(outcsv))
-nn = 2
+target_types = ['OPDA', 'OSDA']
+for target_type in target_types:
+    for ds, st in source_target.items():
+        if ds == 'office':
+            #lrs = [0.01, 0.1]
+            lrs = [0.01]
+            lrs = [0.0001]
+            #KKs = [5]
+        elif ds == 'officehome':
+            #lrs = [0.001, 0.0001]
+            lrs = [0.0001]
+        for src, tar in st:
+            for interval in intervals:
+                for balance in balances:
+                    for lambdav in lambdavs:
+                        for lr in lrs:
+                            for lr_scale in lr_scales:
+                                for KK in KKs:
+                                    for cov in covs:
+                                        for sc in scs:
+                                            for cl in clf:
+                                                #CUDA_VISIBLE_DEVICES=2,3,5,6,7
+                                                cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --batch_size 64 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                       '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
+                                                if cl:
+                                                    cmd += '--classifier \n'
+                                                else:
+                                                    cmd += '\n'
+                                                outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
+                                                if not os.path.isfile(outcsv):
+                                                    outline.append(cmd)
+                                                else:
+                                                    print('======{} exists======'.format(outcsv))
+nn = 6
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
 cuda_list = [1,2,3,6,7]
 cuda_list = [0,1,2,3,4,5,6,7]
-cuda_list = [2,3]
+cuda_list = [0,2,3,4,6,7]
 for ii in range(nn):
     job = 'UDA_{}'.format(ii)
     jobName=job + '.sh'
