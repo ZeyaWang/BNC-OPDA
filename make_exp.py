@@ -41,15 +41,15 @@ lrs = [0.001]#[0.01, 0.001, 0.0005, 0.0001]
 #KKs = [50, 100]
 KKs = [50]
 #KKs = [3,5]
-covs = [0.001]#[0.01, 0.001]
-covs = [0.0001]#[0.01, 0.001]
-covs = [0.01]#[0.01, 0.001]
+# covs = [0.001]#[0.01, 0.001]
+# covs = [0.0001]#[0.01, 0.001]
+covs = [0.01, 0.001]#[0.01, 0.001]
 #scs = ['cos', 'entropy']
 scs = ['cos']
 clf = [False, True] # [False, True]
 clf = [True]
 target_types = ['OPDA', 'OSDA']
-target_types = ['OSDA']
+#target_types = ['OSDA']
 
 for target_type in target_types:
     for ds, st in source_target.items():
@@ -64,7 +64,7 @@ for target_type in target_types:
                                         for sc in scs:
                                             for cl in clf:
                                                 #CUDA_VISIBLE_DEVICES=1,3,5,7
-                                                cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 20 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
                                                        '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                                 if cl:
                                                     cmd += '--classifier \n'
@@ -75,14 +75,14 @@ for target_type in target_types:
                                                     outline.append(cmd)
                                                 else:
                                                     print('======{} exists======'.format(outcsv))
-nn = 1# 7
+nn = 4# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
 #cuda_list = [4,5]
 cuda_list = [6,7]
 cuda_list = [1,3]
-cuda_list = [1]
+cuda_list = [0,1,2,4]
 for ii in range(nn):
     job = 'DAI_{}'.format(ii)
     jobName=job + '.sh'
