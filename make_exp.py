@@ -76,7 +76,7 @@ for target_type in target_types:
                                                     outline.append(cmd)
                                                 else:
                                                     print('======{} exists======'.format(outcsv))
-nn = 6# 7
+nn = 2# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
