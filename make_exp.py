@@ -43,7 +43,7 @@ KKs = [50]
 #KKs = [3,5]
 # covs = [0.001]#[0.01, 0.001]
 # covs = [0.0001]#[0.01, 0.001]
-covs = [0.01, 0.001]#[0.01, 0.001]
+covs = [0.1, 0.01, 0.001]#[0.01, 0.001]
 #scs = ['cos', 'entropy']
 scs = ['cos']
 clf = [False, True] # [False, True]
@@ -75,14 +75,14 @@ for target_type in target_types:
                                                     outline.append(cmd)
                                                 else:
                                                     print('======{} exists======'.format(outcsv))
-nn = 4# 7
+nn = 6# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
 #cuda_list = [4,5]
 cuda_list = [6,7]
 cuda_list = [1,3]
-cuda_list = [0,1,2,4]
+cuda_list = [0,1,2,4, 5, 6]
 for ii in range(nn):
     job = 'DAI_{}'.format(ii)
     jobName=job + '.sh'
