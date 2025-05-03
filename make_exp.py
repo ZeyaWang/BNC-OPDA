@@ -76,14 +76,14 @@ for target_type in target_types:
                                                     outline.append(cmd)
                                                 else:
                                                     print('======{} exists======'.format(outcsv))
-nn = 2# 7
+nn = 4# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
 #cuda_list = [4,5]
 cuda_list = [6,7]
 cuda_list = [0,1,2,4, 5, 6]
-cuda_list = [3,7]
+cuda_list = [1,2,3,7]
 
 for ii in range(nn):
     job = 'DAI_{}'.format(ii)
