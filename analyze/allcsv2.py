@@ -110,19 +110,28 @@ for i in epoch:
             # myd[(lam, lam2, interval)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
             # if (balance == '0.01'):# and (KK != '5'):
             if len(f2[:-4].split('_')) == 15:
-                _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf, bs = f2[:-4].split(
+                _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf, bs = f2[
+                                                                                                             :-4].split(
                     '_')
                 if domain == ttype:
-                    myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf, bs)].append(
+                    myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf, bs, max_k)].append(
+                        [src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
+            elif len(f2[:-4].split('_')) == 16:
+                _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf, bs, dt = f2[
+                                                                                                                 :-4].split(
+                    '_')
+                if domain == ttype:
+                    myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf, bs, dt, max_k)].append(
                         [src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
             elif len(f2[:-4].split('_')) == 14:
-                _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
+                _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split(
+                    '_')
                 if domain == ttype:
-                    myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf)].append(
+                    myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf, max_k)].append(
                         [src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
             elif len(f2[:-4].split('_')) == 13:
                 _, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf = f2[:-4].split('_')
-                myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf)].append(
+                myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf, max_k)].append(
                     [src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
 
     for k in myd:
