@@ -79,14 +79,14 @@ for max_k in max_ks:
                                                         outline.append(cmd)
                                                     else:
                                                         print('======{} exists======'.format(outcsv))
-nn = 4# 7
+nn = 8# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
 #cuda_list = [4,5]
 cuda_list = [6,7]
 cuda_list = [0,1,2,4, 5, 6]
-cuda_list = [1,2,3,7]
+cuda_list = [0,1,2,3,4,5,6,7]
 
 for ii in range(nn):
     job = 'DAI_{}'.format(ii)
