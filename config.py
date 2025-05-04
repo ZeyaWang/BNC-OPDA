@@ -40,7 +40,8 @@ parser.add_argument('--interval', type=int, default=1)
 parser.add_argument('--iter_factor', type=int, default=1)
 
 ## BNC parameters
-parser.add_argument('--max_k', type=int, default=100)
+#parser.add_argument('--max_k', type=int, default=100)
+parser.add_argument('--max_k', type=int, default=3) # scale coefficient for max_k
 parser.add_argument('--covariance_prior', type=float, default=0.01)
 parser.add_argument('--alpha', type=float, default=1)
 

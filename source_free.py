@@ -37,17 +37,25 @@ else:
     #output_device = torch.device('cuda:{}'.format(args.gid))
     output_device = torch.device('cuda')
 #print('==========, device, ', output_device)
+# Cluster = BayesianGaussianMixtureMerge(
+#     n_components=args.max_k,
+#     n_init=5,
+#     weight_concentration_prior=args.alpha / args.max_k,
+#     weight_concentration_prior_type='dirichlet_process',
+#     init_params='kmeans_merge',
+#     covariance_prior=args.covariance_prior * args.bottle_neck_dim * np.identity(
+#         args.bottle_neck_dim),
+#     covariance_type='full')
+
 Cluster = BayesianGaussianMixtureMerge(
-    n_components=args.max_k,
+    n_components=(args.max_k*num_src_cls),
     n_init=5,
-    weight_concentration_prior=args.alpha / args.max_k,
+    weight_concentration_prior=args.alpha / (args.max_k*num_src_cls),
     weight_concentration_prior_type='dirichlet_process',
     init_params='kmeans_merge',
     covariance_prior=args.covariance_prior * args.bottle_neck_dim * np.identity(
         args.bottle_neck_dim),
     covariance_type='full')
-
-
 class OptSets():
     def __init__(self, totalNet, lr, min_step, lr_scale=0.1):
         scheduler = lambda step, initial_lr: inverseDecaySheduler(step, initial_lr, gamma=10, power=0.75, max_iter=min_step)
