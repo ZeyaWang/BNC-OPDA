@@ -330,12 +330,14 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
             best_acc = k_acc
             best_metrics = metrics
     else:
-        if hos > best_hos:
+        if (epoch_id == 0) or (hos > best_hos):
             best_hos = hos
             best_metrics = metrics
 
     with open(f'{log_dir}/output.pkl', 'wb') as file:
         pk.dump([metrics_epoch, best_metrics], file)
+
+
 
 # mid_metrics = metrics_epoch[4]
 # final_metrics = metrics_epoch[9]
