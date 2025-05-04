@@ -270,7 +270,10 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
         if it == 0:
             tgt_embedding, tgt_member = gen_cluster_input(totalNet, target_test_dl, output_device)
         tgt_predict, metrics = clustering(tgt_embedding, tgt_member, predict_y, args.target_type)
-
+        metrics['pre_cluster_tgt_predict'] = predict_y
+        metrics['pre_cluster_embedding'] = tgt_embedding
+        metrics['post_cluster_tgt_predict'] = tgt_predict
+        metrics['post_cluster_tgt_member'] = tgt_member
         sil = silhouette_score(tgt_embedding, tgt_predict)
         d_result[sil] = (t, tgt_predict, metrics)
         dt[t] = sil
@@ -331,8 +334,8 @@ for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
             best_hos = hos
             best_metrics = metrics
 
-with open(f'{log_dir}/output.pkl', 'wb') as file:
-    pk.dump([metrics_epoch, best_metrics], file)
+    with open(f'{log_dir}/output.pkl', 'wb') as file:
+        pk.dump([metrics_epoch, best_metrics], file)
 
 # mid_metrics = metrics_epoch[4]
 # final_metrics = metrics_epoch[9]
