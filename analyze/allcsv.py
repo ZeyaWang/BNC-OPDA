@@ -12,8 +12,8 @@ ttype = 'OPDA'
 #ttype = 'OSDA'
 
 myd = defaultdict(list)
-fd = '../exp_log_Apr28'
-fd = '..'
+fd = '../exp_final1'
+#fd = '..'
 print('===========', fd, '===========')
 for f in os.listdir(fd):
     if f.endswith('.csv'):
