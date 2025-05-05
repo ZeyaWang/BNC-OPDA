@@ -229,7 +229,7 @@ def train(ClustNet, train_ds, memory, optSets, epoch_step, global_step, total_st
 now = datetime.datetime.now().strftime('%b%d_%H-%M-%S')
 subdir = f'{args.balance}_{args.lr}_{args.lr_scale}_{args.iter_factor}_{args.lambdav}_{args.max_k}_{args.KK}_{args.covariance_prior}_{args.score}_{args.classifier}'
 #log_dir = f'exp_{args.dataset}/{source_domain_name}_{target_domain_name}/{args.balance}_{args.interval}_{args.lambdav}_{args.lr}/{now}'
-log_dir = f'exp05_{args.dataset}/{args.target_type}/{source_domain_name}_{target_domain_name}/{subdir}/{now}'
+log_dir = f'exp03_{args.dataset}/{args.target_type}/{source_domain_name}_{target_domain_name}/{subdir}/{now}'
 logger = SummaryWriter(log_dir)
 old_stdout = sys.stdout
 log_file = open(f'{log_dir}/message.log', 'w')
@@ -258,7 +258,7 @@ if args.dataset != 'visda':
     else:
         threshs = [0.4, 0.45, 0.5, 0.55, 0.6]
 else:
-    threshs = [0.5]
+    threshs = [0.3]
 
 for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
     d_result = {}
@@ -355,7 +355,7 @@ best_df = pd.DataFrame(mvalue)
 #                         ])
 # outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(args.target_type, source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
 #                                                               args.interval, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier, args.batch_size)
-outcsv = 'exp05_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(args.target_type, source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
+outcsv = 'exp03_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(args.target_type, source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
                                                               args.iter_factor, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier, args.batch_size)
 best_df.to_csv(outcsv)
 sys.stdout = old_stdout
