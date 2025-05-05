@@ -90,7 +90,7 @@ cuda_list = [6,7]
 cuda_list = [0,1,2,4, 5, 6]
 cuda_list = [0,1,2,3]#,4,5,6,7]
 cuda_list = [0,1]
-cuda_list = [2,4]
+#cuda_list = [2,4]
 for ii in range(nn):
     job = 'DAI_{}'.format(ii)
     jobName=job + '.sh'
