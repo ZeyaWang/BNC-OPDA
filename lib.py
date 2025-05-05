@@ -12,7 +12,6 @@ from sklearn.manifold import TSNE
 import plotly.express as px
 from function import BetaMixture1D
 import torch.nn.functional as F
-import sklearn.metrics.adjusted_rand_score as ari
 
 def seed_everything(seed=1234):
     import random
