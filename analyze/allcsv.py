@@ -13,7 +13,7 @@ ttype = 'OPDA'
 
 myd = defaultdict(list)
 fd = '../exp_final1'
-#fd = '..'
+fd = '..'
 print('===========', fd, '===========')
 for f in os.listdir(fd):
     if f.endswith('.csv'):
