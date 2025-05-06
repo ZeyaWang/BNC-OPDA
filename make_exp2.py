@@ -60,11 +60,11 @@ for target_type in target_types:
         if ds == 'office':
             #lrs = [0.01, 0.1]
             lrs = [0.01]
-            lrs = [0.00001, 0.0001, 0.001, 0.01, 0.1, 1]
+            lrs = [0.00001, 0.0001, 0.001, 0.01, 0.1]
             #KKs = [5]
         elif ds == 'officehome':
             #lrs = [0.001, 0.0001]
-            lrs = [0.00001, 0.0001, 0.001, 0.01, 0.1, 1]
+            lrs = [0.00001, 0.0001, 0.001, 0.01, 0.1]
         for src, tar in st:
             for interval in intervals:
                 for balance in balances:
