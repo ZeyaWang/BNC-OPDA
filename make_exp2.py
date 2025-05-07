@@ -40,7 +40,7 @@ intervals = [1]
 #balances = [0.001, 0.01, 0.1, 1.0]
 #balances = [0.001, 0.01]
 lambdavs = [0.0]
-balances = [1,0.01]#[0.001, 0.01]
+balances = [1]#[0.001, 0.01]
 lr_scales = [0.1]
 max_k = 100
 #max_k = 3
@@ -78,13 +78,13 @@ for target_type in target_types:
                                         for sc in scs:
                                             for cl in clf:
                                                 #CUDA_VISIBLE_DEVICES=2,3,5,6,7
-                                                cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free2.py --total_epoch 10 --batch_size 64 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --batch_size 64 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
                                                        '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                                 if cl:
                                                     cmd += '--classifier \n'
                                                 else:
                                                     cmd += '\n'
-                                                outcsv = 'exp_tmp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
+                                                outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
                                                 if not os.path.isfile(outcsv):
                                                     outline.append(cmd)
                                                 else:
