@@ -3,6 +3,7 @@ import pandas as pd
 import os,sys
 from collections import defaultdict
 import numpy as np
+import argparse
 
 dm1 = ['Art', 'Clipart', 'Product', 'RealWorld']
 dm2 = ['amazon', 'dslr', 'webcam']
@@ -10,6 +11,13 @@ dm3 = ['train', 'validation']
 ttype = 'PDA'
 ttype = 'OPDA'
 #ttype = 'OSDA'
+
+
+
+parser = argparse.ArgumentParser(description='Process.')
+parser.add_argument('ttype', type=str, help='ttype', default='OPDA')
+args = parser.parse_args()
+ttype = args.ttype
 
 myd = defaultdict(list)
 fd = '../exp_final1'
