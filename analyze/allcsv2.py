@@ -15,7 +15,7 @@ ttype = 'OPDA'
 
 
 parser = argparse.ArgumentParser(description='Process.')
-parser.add_argument('ttype', type=str, help='ttype', default='OPDA')
+parser.add_argument('--ttype', type=str, help='ttype', default='OPDA')
 args = parser.parse_args()
 ttype = args.ttype
 
