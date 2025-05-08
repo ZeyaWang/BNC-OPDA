@@ -52,7 +52,7 @@ KKs = [50]
 covs = [0.001]
 #scs = ['cos', 'entropy']
 scs = ['cos']
-scs = ['entropy']
+#scs = ['entropy']
 clf = [False, True] # [False, True]
 clf = [True]
 target_types = ['OPDA', 'OSDA']
@@ -71,13 +71,13 @@ for max_k in max_ks:
                                             for sc in scs:
                                                 for cl in clf:
                                                     #CUDA_VISIBLE_DEVICES=1,3,5,7
-                                                    cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                    cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free3.py --total_epoch 10 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
                                                            '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
                                                     if cl:
                                                         cmd += '--classifier \n'
                                                     else:
                                                         cmd += '\n'
-                                                    outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
+                                                    outcsv = 'exp3_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
                                                     if not os.path.isfile(outcsv):
                                                         outline.append(cmd)
                                                     else:
@@ -90,7 +90,7 @@ for i, element in enumerate(outline):
 cuda_list = [6,7]
 cuda_list = [0,1,2,4, 5, 6]
 cuda_list = [0,1,2,3]#,4,5,6,7]
-cuda_list = [0,1]
+cuda_list = [6,7]
 #cuda_list = [2,4]
 for ii in range(nn):
     job = 'DAI_{}'.format(ii)

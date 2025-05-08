@@ -44,7 +44,7 @@ for ds, st in source_target.items():
 
                         else:
                             print('======{} exists======'.format(outcsv))
-nn = 3# 7
+nn = 6# 7
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
