@@ -80,6 +80,8 @@ def detect(totalNet, thresh=0.5, score='cos'):
     #print(labels)
     feature = np.concatenate(feature_list, axis=0)
     pred_logits = np.concatenate(pred_logits, axis=0)
+    preds = np.argmax(pred_logits, axis=1)
+    labels = np.concatenate(label_list, axis=0)
     entropy_scores = entropy_numpy(pred_logits)
     sim_bmm_model = sim_bmm(norm=True)
     init_centers = totalNet.classifier.fc.weight.detach().cpu().numpy()
@@ -102,7 +104,8 @@ def detect(totalNet, thresh=0.5, score='cos'):
     else:
         sim_bmm_model.bmm_fit(entropy_scores)
         w_k_posterior, _ = sim_bmm_model.get_posterior(entropy_scores)
-    label_ = np.copy(cos_argmax)
+    #label_ = np.copy(cos_argmax)
+    label_ = np.copy(preds)
     label_[w_k_posterior <= thresh] = 100
     return label_, cos_max, w_k_posterior, cos_argmax, feature, init_centers, sim_bmm_model
 
