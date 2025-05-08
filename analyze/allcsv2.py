@@ -22,7 +22,7 @@ ttype = args.ttype
 myd = defaultdict(list)
 fd = '../exp_final1'
 fd = '../exp_final3'
-fd = '..'
+#fd = '..'
 print('===========', fd, '===========')
 for f in os.listdir(fd):
     if f.endswith('.csv'):
