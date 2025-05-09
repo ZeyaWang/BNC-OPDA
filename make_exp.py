@@ -51,13 +51,17 @@ KKs = [50]
 #covs = [1.0, 10.0]
 covs = [0.001]
 #scs = ['cos', 'entropy']
-scs = ['cos', 'entropy']
+scs = ['cos']#, 'entropy']
 clf = [False, True] # [False, True]
 clf = [True]
 target_types = ['OPDA', 'OSDA']
-target_types = ['OPDA']
+#target_types = ['OPDA']
 for max_k in max_ks:
     for target_type in target_types:
+        if target_type == 'OSDA':
+            balances = [0.01]
+        else:
+            balances = [0]
         for ds, st in source_target.items():
             for src, tar in st:
                 for interval in intervals:
