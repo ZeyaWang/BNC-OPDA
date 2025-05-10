@@ -104,8 +104,8 @@ def detect(totalNet, thresh=0.5, score='cos'):
     else:
         sim_bmm_model.bmm_fit(entropy_scores)
         w_k_posterior, _ = sim_bmm_model.get_posterior(entropy_scores)
-    #label_ = np.copy(cos_argmax)
-    label_ = np.copy(preds)
+    label_ = np.copy(cos_argmax)
+    #label_ = np.copy(preds)
     label_[w_k_posterior <= thresh] = 100
     return label_, cos_max, w_k_posterior, cos_argmax, feature, init_centers, sim_bmm_model
 
