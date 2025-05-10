@@ -16,13 +16,14 @@ ttype = 'OPDA'
 
 parser = argparse.ArgumentParser(description='Process.')
 parser.add_argument('--ttype', type=str, help='ttype', default='OPDA')
+parser.add_argument('--fd', type=str, help='dir', default='..')
 args = parser.parse_args()
 ttype = args.ttype
 
 myd = defaultdict(list)
 fd = '../exp_final1'
 fd = '../exp_final3'
-fd = '..'
+fd = args.fd
 print('===========', fd, '===========')
 for f in os.listdir(fd):
     if f.endswith('.csv'):
