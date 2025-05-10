@@ -95,8 +95,19 @@ for k in myd:
         ddd = ddd[['task',2,3,4,5,6,7]]
         ddd = ddd.rename(columns={2: 'hos',3: 'acc',4: 'nmi',5: 'known acc',6: 'unknown nmi', 7: 'epoch'})
         ddd = ddd.round(1)
+        hos = ddd['hos'].tolist()
+        acc = ddd['acc'].tolist()
+        nmi = ddd['nmi'].tolist()
         print(k)
         print(ddd)
+        hos = '& '.join(hos)
+        acc = '& '.join(acc)
+        nmi = '& '.join(nmi)
+        print(hos)
+        print(acc)
+        print(nmi)
+
+
 ########################################################################################################################
 epoch = [9]
 
@@ -187,9 +198,17 @@ for i in epoch:
             ddd = ddd[['task', 2, 3, 4, 5, 6, 7]]
             ddd = ddd.rename(columns={2: 'hos', 3: 'acc', 4: 'nmi', 5: 'known acc', 6: 'unknown nmi', 7: 'epoch'})
             ddd = ddd.round(1)
+            hos = ddd['hos'].tolist()
+            acc = ddd['acc'].tolist()
+            nmi = ddd['nmi'].tolist()
             print(k)
             print(ddd)
-
+            hos = '& '.join(hos)
+            acc = '& '.join(acc)
+            nmi = '& '.join(nmi)
+            print(hos)
+            print(acc)
+            print(nmi)
 ########################################################################################################################
 # print('========== final results ===========')
 # myd = defaultdict(list)
