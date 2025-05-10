@@ -50,11 +50,11 @@ max_k = 100
 KKs = [5]
 covs = [0.001]#[0.01, 0.001]
 scs = ['cos', 'entropy']
-#scs = ['cos']
+scs = ['cos']
 #clf = [False, True] # [False, True]
 clf = [True]
 target_types = ['OPDA', 'OSDA']
-#target_types = ['OSDA']
+target_types = ['OPDA']
 
 for target_type in target_types:
     if target_type == 'OSDA':
