@@ -39,6 +39,11 @@ for f in os.listdir(fd):
         else:
             hos, acc_test, nmi, k_acc, uk_nmi = res[2:7]
             epoch = int(res[1])
+        hos = round(hos*100, 1)
+        acc_test = round(acc_test*100, 1)
+        nmi = round(nmi*100, 1)
+        k_acc = round(k_acc*100, 1)
+        uk_nmi = round(uk_nmi*100, 1)
         #if lam not in ['0.1','1.0'] and interval != '10':
         #myd[(lam, lam2, interval)].append([src, tar, hos, acc_test, nmi, k_acc, uk_nmi])
         #if (balance == '0.01'):# and (KK != '5'):
