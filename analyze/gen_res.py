@@ -68,12 +68,12 @@ for k in myd:
 
 np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
 for k in myd:
-    if k == ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'):
+    if (k == ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100')) or (k == ('0.01', '0.01', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100')):
         dd = pd.DataFrame(myd[k])
-        nc = dd.select_dtypes(include='number').mean()
-        nc = pd.DataFrame(nc).T
-        ddd = pd.concat([dd, nc], ignore_index=True)
-        ddd = ddd.fillna('')
+        # nc = dd.select_dtypes(include='number').mean()
+        # nc = pd.DataFrame(nc).T
+        # ddd = pd.concat([dd, nc], ignore_index=True)
+        ddd = dd.fillna('')
         #fn = "sum" + "_".join(map(str, k)) + ".csv"
         #print(k, ddd)
         dd1 = ddd[ddd[0].isin(dm1)]
@@ -109,7 +109,7 @@ for k in myd:
 
 
 ########################################################################################################################
-epoch = [9]
+epoch = [10]
 
 for i in epoch:
     print('========== results epoch {} ==========='.format(i))
@@ -168,12 +168,15 @@ for i in epoch:
 
     np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
     for k in myd:
-        if k == ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'):
+        if (k == ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100')) or (
+                k == ('0.01', '0.01', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100')):
             dd = pd.DataFrame(myd[k])
-            nc = dd.select_dtypes(include='number').mean()
-            nc = pd.DataFrame(nc).T
-            ddd = pd.concat([dd, nc], ignore_index=True)
-            ddd = ddd.fillna('')
+            # nc = dd.select_dtypes(include='number').mean()
+            # nc = pd.DataFrame(nc).T
+            # ddd = pd.concat([dd, nc], ignore_index=True)
+            ddd = dd.fillna('')
+            # fn = "sum" + "_".join(map(str, k)) + ".csv"
+            # print(k, ddd)
             # fn = "sum" + "_".join(map(str, k)) + ".csv"
             # print(k, ddd)
             dd1 = ddd[ddd[0].isin(dm1)]
