@@ -94,6 +94,7 @@ for k in myd:
         ddd = pd.concat([dd1, dd2, dd3], ignore_index=True)
         ddd = ddd[['task',2,3,4,5,6,7]]
         ddd = ddd.rename(columns={2: 'hos',3: 'acc',4: 'nmi',5: 'known acc',6: 'unknown nmi', 7: 'epoch'})
+        ddd = ddd.round(1)
         print(k)
         print(ddd)
 ########################################################################################################################
@@ -185,6 +186,7 @@ for i in epoch:
             ddd = pd.concat([dd1, dd2, dd3], ignore_index=True)
             ddd = ddd[['task', 2, 3, 4, 5, 6, 7]]
             ddd = ddd.rename(columns={2: 'hos', 3: 'acc', 4: 'nmi', 5: 'known acc', 6: 'unknown nmi', 7: 'epoch'})
+            ddd = ddd.round(1)
             print(k)
             print(ddd)
 
