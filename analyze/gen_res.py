@@ -100,13 +100,18 @@ for k in myd:
         nmi = ddd['nmi'].astype(str).tolist()
         print(k)
         print(ddd)
-        hos = '& '.join(hos)
-        acc = '& '.join(acc)
-        nmi = '& '.join(nmi)
-        print(hos)
-        print(acc)
-        print(nmi)
-
+        if k == ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'):
+            hos_b_h = '& '.join(hos[:13])
+            acc_b_h = '& '.join(acc[:13])
+            nmi_b_h = '& '.join(nmi[:13])
+        if k == ('0.01', '0.01', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'):
+            hos_b = '& '.join(hos[13:])
+            acc_b = '& '.join(acc[13:])
+            nmi_b = '& '.join(nmi[13:])
+        # print(hos)
+        # print(acc)
+        # print(nmi)
+        #
 
 ########################################################################################################################
 epoch = [10]
@@ -206,12 +211,33 @@ for i in epoch:
             nmi = ddd['nmi'].astype(str).tolist()
             print(k)
             print(ddd)
-            hos = '& '.join(hos)
-            acc = '& '.join(acc)
-            nmi = '& '.join(nmi)
-            print(hos)
-            print(acc)
-            print(nmi)
+            if k == ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'):
+                hos_f_h = '& '.join(hos[:13])
+                acc_f_h = '& '.join(acc[:13])
+                nmi_f_h = '& '.join(nmi[:13])
+            if k == ('0.01', '0.01', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'):
+                hos_f = '& '.join(hos[13:])
+                acc_f = '& '.join(acc[13:])
+                nmi_f = '& '.join(nmi[13:])
+            # hos = '& '.join(hos)
+            # acc = '& '.join(acc)
+            # nmi = '& '.join(nmi)
+            # print(hos)
+            # print(acc)
+            # print(nmi)
+print(hos_b_h)
+print(hos_f_h)
+print(hos_b)
+print(hos_f)
+print(acc_b_h)
+print(acc_f_h)
+print(acc_b)
+print(acc_f)
+print(nmi_b_h)
+print(nmi_f_h)
+print(nmi_b)
+print(nmi_f)
+
 ########################################################################################################################
 # print('========== final results ===========')
 # myd = defaultdict(list)
