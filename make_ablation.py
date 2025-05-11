@@ -77,7 +77,7 @@ for target_type in target_types:
                                             for cl in clf:
                                                 #CUDA_VISIBLE_DEVICES=2,3,5,6,7
                                                 cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --batch_size 64 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
-                                                       '--lr_scale {} --iter_factor {} --alpha {} --max_k {} --KK {} --covariance_prior {} --score {}').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, alpha, max_k, KK, cov, sc)
+                                                       '--lr_scale {} --iter_factor {} --alpha {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, alpha, max_k, KK, cov, sc)
                                                 if cl:
                                                     cmd += '--classifier \n'
                                                 else:
