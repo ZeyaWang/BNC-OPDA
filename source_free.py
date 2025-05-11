@@ -359,7 +359,7 @@ best_df = pd.DataFrame(mvalue)
 # outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(args.target_type, source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
 #                                                               args.interval, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier, args.batch_size)
 outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(args.target_type, source_domain_name, target_domain_name, args.balance, args.lr, args.lr_scale,
-                                                              args.iter_factor, args.lambdav, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier, args.batch_size)
+                                                              args.iter_factor, args.alpha, args.max_k, args.KK, args.covariance_prior, args.score, args.classifier, args.batch_size)
 best_df.to_csv(outcsv)
 sys.stdout = old_stdout
 log_file.close()
