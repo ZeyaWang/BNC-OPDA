@@ -40,8 +40,8 @@ intervals = [1]
 #balances = [0.001, 0.1, 0.0, 1.0]
 #balances = [0.001, 0.01]
 lambdavs = [0.0]
-alphas = [100.0, 200.0, 400.0]
-#alphas = [1]
+#alphas = [100.0, 200.0, 400.0]
+alphas = [0.1, 0.01]
 balances = [0.01]
 #balances = [0.001, 0.0, 0.1, 1.0]
 lr_scales = [0.1]
@@ -93,13 +93,13 @@ for target_type in target_types:
                                                     outline.append(cmd)
                                                 else:
                                                     print('======{} exists======'.format(outcsv))
-nn = 6
+nn = 3
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
 cuda_list = [1,2,3,6,7]
 cuda_list = [2,3,4,5,6,7]
-cuda_list = [2,3,4,5,6,7]
+cuda_list = [5,6,7]
 for ii in range(nn):
     job = 'UDA_{}'.format(ii)
     jobName=job + '.sh'
