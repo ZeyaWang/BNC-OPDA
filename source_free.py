@@ -255,13 +255,18 @@ global_step = 0
 
 metrics_epoch = {}
 best_hos, best_acc = 0., 0.
-if args.dataset != 'visda':
-    if args.target_type == 'PDA':
-        threshs = [0.5, 0.6, 0.7, 0.8, 0.9]
-    else:
-        threshs = [0.4, 0.45, 0.5, 0.55, 0.6]
+
+if args.thresh is not None:
+    print('##########Threshold is set to {}##########'.format(args.thresh))
+    thresh = [args.thresh]
 else:
-    threshs = [0.5]
+    if args.dataset != 'visda':
+        if args.target_type == 'PDA':
+            threshs = [0.5, 0.6, 0.7, 0.8, 0.9]
+        else:
+            threshs = [0.4, 0.45, 0.5, 0.55, 0.6]
+    else:
+        threshs = [0.5]
 
 for epoch_id in tqdm(range(args.total_epoch), desc="Processing"):
     d_result = {}

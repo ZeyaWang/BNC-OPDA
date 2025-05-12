@@ -31,6 +31,7 @@ print('===========', fd, '===========')
 base =  {'officehome': ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'),
         'office': ('0.01', '0.01', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100')}
 
+abs = {'KK': [5, 10, 20, 50], 'balance': [0.001, 0.01, 0.1, 0.0, 1.0], 'alpha': [0.0, 100.0, 200.0, 400.0], 'delta': [0.4, 0.45, 0.5, 0.55, 0.6]}
 abs = {'KK': [5, 10, 20, 50], 'balance': [0.001, 0.01, 0.1, 0.0, 1.0], 'alpha': [0.0, 100.0, 200.0, 400.0]}
 pos = {'KK': 5, 'balance': 0, 'alpha': 4}
 
@@ -125,7 +126,10 @@ for epoch, myd in myr.items():
                 # hos = ddd['hos'].astype(str).tolist()
                 # acc = ddd['acc'].astype(str).tolist()
                 # nmi = ddd['nmi'].astype(str).tolist()
-                results[ek][ds][value] = ddd
+                if (abtype == 'alpha') and (value == 0.0):
+                    results[ek][ds][1.0] = ddd
+                else:
+                    results[ek][ds][value] = ddd
                 # print(k)
                 # print(ddd)
                 # if k == ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'):
