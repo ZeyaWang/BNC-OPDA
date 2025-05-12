@@ -49,7 +49,7 @@ for ds in ['office', 'officehome']:
 
 epochs = [0, 10]
 myr = {}
-for epoch in epochs:
+for ep in epochs:
     myd = defaultdict(list)
     for f in os.listdir(fd):
         if f.endswith('.csv'):
@@ -88,7 +88,7 @@ for epoch in epochs:
                     [src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
     for k in myd:
         myd[k].sort()
-    myr[epoch] = myd
+    myr[ep] = myd
 
 # print(abpool)
 # print(myr)
