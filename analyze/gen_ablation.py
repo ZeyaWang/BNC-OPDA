@@ -92,14 +92,18 @@ for ep in epochs:
 
 # print(abpool)
 # print(myr)
-
+results = {}
+ekey = {0: 'best', 10: 'current'}
 np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
 for epoch, myd in myr.items():
     print(epoch)
+    ek = ekey[epoch]
+    results[ek] = {}
     for ds in ['office', 'officehome']:
         abp = abpool[ds]
         for k in myd:
             if k in abp:
+                value = k[pos]
                 dd = pd.DataFrame(myd[k])
                 ddd = dd.fillna('')
                 #print(ddd)
@@ -119,8 +123,9 @@ for epoch, myd in myr.items():
                 # hos = ddd['hos'].astype(str).tolist()
                 # acc = ddd['acc'].astype(str).tolist()
                 # nmi = ddd['nmi'].astype(str).tolist()
-                print(k)
-                print(ddd)
+                results[ek][value] = ddd
+                # print(k)
+                # print(ddd)
                 # if k == ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'):
                 #     hos_b_h = '& '.join(hos[:13])
                 #     acc_b_h = '& '.join(acc[:13])
@@ -129,7 +134,7 @@ for epoch, myd in myr.items():
                 #     hos_b = '& '.join(hos[13:])
                 #     acc_b = '& '.join(acc[13:])
                 #     nmi_b = '& '.join(nmi[13:])
-
+print(results)
 # ########################################################################################################################
 # epoch = [10]
 #
