@@ -95,6 +95,7 @@ for epoch in epochs:
 
 np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
 for epoch, myd in myr.items():
+    print(epoch)
     for ds in ['office', 'officehome']:
         abp = abpool[ds]
         for k in myd:
