@@ -40,8 +40,8 @@ intervals = [1]
 #balances = [0.001, 0.01, 0.1, 1.0]
 #balances = [0.001, 0.01]
 lambdavs = [0.0]
-alphas = [100.0, 200.0, 400.0]
-#alphas = [1]
+#alphas = [100.0, 200.0, 400.0]
+alphas = [1]
 #balances = [0.01]
 balances = [0.001, 0.0, 0.1, 1.0]
 lr_scales = [0.1]
@@ -85,7 +85,10 @@ for target_type in target_types:
                                                     cmd += '--classifier \n'
                                                 else:
                                                     cmd += '\n'
-                                                outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_64.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, alpha, max_k, KK, cov, sc, cl)
+                                                if alpha == 1:
+                                                    outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_64.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, 0.0, max_k, KK, cov, sc, cl)
+                                                else:
+                                                    outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_64.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, alpha, max_k, KK, cov, sc, cl)
                                                 if not os.path.isfile(outcsv):
                                                     outline.append(cmd)
                                                 else:
