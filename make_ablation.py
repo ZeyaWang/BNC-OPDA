@@ -82,7 +82,7 @@ for target_type in target_types:
                                                     cmd += '--classifier \n'
                                                 else:
                                                     cmd += '\n'
-                                                outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, alpha, max_k, KK, cov, sc, cl)
+                                                outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_64.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, alpha, max_k, KK, cov, sc, cl)
                                                 if not os.path.isfile(outcsv):
                                                     outline.append(cmd)
                                                 else:
