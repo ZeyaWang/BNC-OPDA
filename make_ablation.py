@@ -42,7 +42,8 @@ intervals = [1]
 lambdavs = [0.0]
 alphas = [100.0, 200.0, 400.0]
 #alphas = [1]
-balances = [0.01]
+#balances = [0.01]
+balances = [0.001, 0.0, 0.1, 1.0]
 lr_scales = [0.1]
 max_k = 100
 #max_k = 3
@@ -95,7 +96,7 @@ for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
 cuda_list = [1,2,3,6,7]
 cuda_list = [2,3,4,5,6,7]
-cuda_list = [2]
+cuda_list = [3]
 for ii in range(nn):
     job = 'UDA_{}'.format(ii)
     jobName=job + '.sh'
