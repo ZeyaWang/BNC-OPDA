@@ -10,3 +10,4 @@ exp*
 *.sh
 *.err
 *.out
+*.pkl
