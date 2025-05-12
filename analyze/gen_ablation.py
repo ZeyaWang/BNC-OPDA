@@ -4,6 +4,7 @@ import os,sys
 from collections import defaultdict
 import numpy as np
 import argparse
+import pickle as pk
 
 dm1 = ['Art', 'Clipart', 'Product', 'RealWorld']
 dm2 = ['amazon', 'dslr', 'webcam']
@@ -17,7 +18,7 @@ dmd = {
 parser = argparse.ArgumentParser(description='Process.')
 parser.add_argument('--ttype', type=str, help='ttype', default='OPDA')
 parser.add_argument('--fd', type=str, help='dir', default='..')
-parser.add_argument('--abtype', type=str, help='ab', default='balance')
+parser.add_argument('--abtype', type=str, help='KK, balance, or alpha', default='balance')
 
 args = parser.parse_args()
 ttype = args.ttype
@@ -135,6 +136,9 @@ for epoch, myd in myr.items():
                 #     acc_b = '& '.join(acc[13:])
                 #     nmi_b = '& '.join(nmi[13:])
 print(results)
+with open('ablation_{}.pkl'.format(abtype), 'wb') as f:
+    pk.dump(results, f)
+
 # ########################################################################################################################
 # epoch = [10]
 #
