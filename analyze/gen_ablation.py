@@ -27,8 +27,8 @@ abtype = args.abtype
 
 print('===========', fd, '===========')
 
-base =  {'office': ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'),
-        'officehome': ('0.01', '0.01', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100')}
+base =  {'officehome': ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'),
+        'office': ('0.01', '0.01', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100')}
 
 abs = {'KK': [5, 10, 20, 50], 'balance': [0.001, 0.01, 0.1, 0.0, 1.0], 'alpha': [0.0, 100.0, 200.0, 400.0]}
 pos = {'KK': 5, 'balance': 0, 'alpha': 4}
@@ -101,16 +101,16 @@ for epoch, myd in myr.items():
             if k in abp:
                 dd = pd.DataFrame(myd[k])
                 ddd = dd.fillna('')
-                print(ddd)
+                #print(ddd)
                 dm = dmd[ds]
                 dd1 = ddd[ddd[0].isin(dm)]
-                print(dm, dd1)
+                #print(dm, dd1)
                 dd1['task'] = dd1[0].astype(str) + '_' +  dd1[1].astype(str)
                 dd1 = dd1.drop(columns=[0, 1])
                 mean1 = dd1.drop(columns=['task']).mean()
                 mean1['task'] = 'Average'
                 dd1.loc['mean'] = mean1
-                print(dd1)
+                #print(dd1)
                 ddd = pd.concat([dd1], ignore_index=True)
                 ddd = ddd[['task',2,3,4,5,6,7]]
                 ddd = ddd.rename(columns={2: 'hos',3: 'acc',4: 'nmi',5: 'known acc',6: 'unknown nmi', 7: 'epoch'})
