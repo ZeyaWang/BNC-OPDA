@@ -101,6 +101,7 @@ for epoch, myd in myr.items():
             if k in abp:
                 dd = pd.DataFrame(myd[k])
                 ddd = dd.fillna('')
+                print(ddd)
                 dm = dmd[ds]
                 dd1 = ddd[ddd[0].isin(dm)]
                 dd1['task'] = dd1[0].astype(str) + '_' +  dd1[1].astype(str)
@@ -108,6 +109,7 @@ for epoch, myd in myr.items():
                 mean1 = dd1.drop(columns=['task']).mean()
                 mean1['task'] = 'Average'
                 dd1.loc['mean'] = mean1
+                print(dd1)
                 ddd = pd.concat([dd1], ignore_index=True)
                 ddd = ddd[['task',2,3,4,5,6,7]]
                 ddd = ddd.rename(columns={2: 'hos',3: 'acc',4: 'nmi',5: 'known acc',6: 'unknown nmi', 7: 'epoch'})
