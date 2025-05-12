@@ -90,7 +90,8 @@ for epoch in epochs:
         myd[k].sort()
     myr[epoch] = myd
 
-
+print(abpool)
+print(myr)
 
 np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
 for epoch, myd in myr.items():
