@@ -54,7 +54,7 @@ for ep in epochs:
     for f in os.listdir(fd):
         if f.endswith('.csv'):
             ff = os.path.join(fd, f)
-            res = pd.read_csv(ff, header=None).iloc[1+epoch].tolist()
+            res = pd.read_csv(ff, header=None).iloc[1+ep].tolist()
             f2 = f.replace('Real_World', 'RealWorld')
             if (res[1] < 1) and (res[1] > 0):
                 hos, acc_test, nmi, k_acc, uk_nmi = res[1:6]
