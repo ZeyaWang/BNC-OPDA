@@ -103,7 +103,7 @@ for epoch, myd in myr.items():
         abp = abpool[ds]
         for k in myd:
             if k in abp:
-                value = k[pos]
+                value = k[ps]
                 dd = pd.DataFrame(myd[k])
                 ddd = dd.fillna('')
                 #print(ddd)
