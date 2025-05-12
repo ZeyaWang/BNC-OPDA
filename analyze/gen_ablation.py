@@ -104,6 +104,7 @@ for epoch, myd in myr.items():
                 print(ddd)
                 dm = dmd[ds]
                 dd1 = ddd[ddd[0].isin(dm)]
+                print(dm, dd1)
                 dd1['task'] = dd1[0].astype(str) + '_' +  dd1[1].astype(str)
                 dd1 = dd1.drop(columns=[0, 1])
                 mean1 = dd1.drop(columns=['task']).mean()
