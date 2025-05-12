@@ -43,7 +43,7 @@ for ds in ['office', 'officehome']:
     bs = base[ds]
     for v in ab:
         bst = list(bs)
-        bst[ps] = v
+        bst[ps] = str(v)
         bst = tuple(bst)
         abpool[ds].append(bst)
 
@@ -90,8 +90,8 @@ for epoch in epochs:
         myd[k].sort()
     myr[epoch] = myd
 
-print(abpool)
-print(myr)
+# print(abpool)
+# print(myr)
 
 np.set_printoptions(threshold=sys.maxsize, edgeitems=30, linewidth=1000)
 for epoch, myd in myr.items():
