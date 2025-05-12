@@ -101,6 +101,7 @@ for epoch, myd in myr.items():
     ek = ekey[epoch]
     results[ek] = {}
     for ds in ['office', 'officehome']:
+        results[ek][ds] = {}
         abp = abpool[ds]
         for k in myd:
             if k in abp:
@@ -124,7 +125,7 @@ for epoch, myd in myr.items():
                 # hos = ddd['hos'].astype(str).tolist()
                 # acc = ddd['acc'].astype(str).tolist()
                 # nmi = ddd['nmi'].astype(str).tolist()
-                results[ek][value] = ddd
+                results[ek][ds][value] = ddd
                 # print(k)
                 # print(ddd)
                 # if k == ('0.01', '0.0001', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'):
