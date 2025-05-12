@@ -137,7 +137,7 @@ for epoch, myd in myr.items():
                 #     acc_b = '& '.join(acc[13:])
                 #     nmi_b = '& '.join(nmi[13:])
 print(results)
-with open('ablation_{}.pkl'.format(abtype), 'wb') as f:
+with open('/scratch/zwa281/UDA/ablation_{}.pkl'.format(abtype), 'wb') as f:
     pk.dump(results, f)
 
 # ########################################################################################################################
