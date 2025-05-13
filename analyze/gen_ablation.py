@@ -17,7 +17,7 @@ dmd = {
 
 parser = argparse.ArgumentParser(description='Process.')
 parser.add_argument('--ttype', type=str, help='ttype', default='OPDA')
-parser.add_argument('--fd', type=str, help='dir', default='..')
+parser.add_argument('--fd', type=str, help='dir', default='../exp_ablation')
 parser.add_argument('--abtype', type=str, help='KK, balance, or alpha', default='balance')
 
 args = parser.parse_args()
