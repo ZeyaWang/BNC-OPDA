@@ -84,11 +84,11 @@ for max_k in max_ks:
                                                             cmd += '--classifier \n'
                                                         else:
                                                             cmd += '\n'
-                                                    # outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
-                                                    # if not os.path.isfile(outcsv):
-                                                    #     outline.append(cmd)
-                                                    # else:
-                                                    #     print('======{} exists======'.format(outcsv))
+                                                        outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, cl)
+                                                        if not os.path.isfile(outcsv):
+                                                            outline.append(cmd)
+                                                        else:
+                                                            print('======{} exists======'.format(outcsv))
 split_lists = [[] for _ in range(nn)]
 for i, element in enumerate(outline):
     split_lists[i % nn].append(element)
