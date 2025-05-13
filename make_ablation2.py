@@ -51,8 +51,8 @@ max_k = 100
 # lrs = [0.001]#[0.01, 0.001, 0.0005, 0.0001]
 # lrs = [0.001, 0.0005]
 # KKs = [5,10,50]#[5, 30, 100]
-KKs = [10, 20, 50]
-#KKs = [5]
+#KKs = [10, 20, 50]
+KKs = [5]
 covs = [0.001]#[0.01, 0.001]
 #scs = ['cos', 'entropy']
 scs = ['cos']
@@ -81,16 +81,16 @@ for target_type in target_types:
                                         for sc in scs:
                                             for cl in clf:
                                                 #CUDA_VISIBLE_DEVICES=2,3,5,6,7
-                                                cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free.py --total_epoch 10 --batch_size 64 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free_delta.py --total_epoch 10 --batch_size 64 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
                                                        '--lr_scale {} --thresh {} --alpha {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, thresh, alpha, max_k, KK, cov, sc)
                                                 if cl:
                                                     cmd += '--classifier \n'
                                                 else:
                                                     cmd += '\n'
                                                 if alpha == 1:
-                                                    outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_64.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, 0.0, max_k, KK, cov, sc, cl)
+                                                    outcsv = 'expdt_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_64.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, thresh, 0.0, max_k, KK, cov, sc, cl)
                                                 else:
-                                                    outcsv = 'exp_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_64.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, interval, alpha, max_k, KK, cov, sc, cl)
+                                                    outcsv = 'expdt_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_64.csv'.format(target_type, domain[ds][src], domain[ds][tar], balance, lr, lr_scale, thresh, alpha, max_k, KK, cov, sc, cl)
                                                 if not os.path.isfile(outcsv):
                                                     outline.append(cmd)
                                                 else:
