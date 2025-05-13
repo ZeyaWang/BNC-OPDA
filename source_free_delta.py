@@ -258,7 +258,7 @@ best_hos, best_acc = 0., 0.
 
 if args.thresh is not None:
     print('##########Threshold is set to {}##########'.format(args.thresh))
-    thresh = [args.thresh]
+    threshs = [args.thresh]
 else:
     if args.dataset != 'visda':
         if args.target_type == 'PDA':
