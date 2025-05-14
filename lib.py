@@ -357,6 +357,7 @@ def merge_perf(tgt_member, tgt_member_new, ncls):
     print(k_acc_total)
     print(k_num_total)
     print(k_pos_total)
+
     known_acc = np.array(list(k_acc_total.values())).mean()
     unknown_acc = np.sum(tgt_member_new_unknown > ncls-1) / len(tgt_member_new_unknown)
     h_score = 2 * known_acc * unknown_acc / (known_acc + unknown_acc + 1e-5)
@@ -375,6 +376,50 @@ def merge_perf(tgt_member, tgt_member_new, ncls):
     prec = TP / (TP + FP)
     print('precision is', prec, TP, TP + FP)
     return nmi_v, k_acc, uk_nmi, rec, prec
+
+def merge_perf_only(tgt_member, tgt_member_new, ncls):
+    tar_label_known = tgt_member[tgt_member < ncls]
+    tgt_member_new_known = tgt_member_new[tgt_member < ncls]
+    tar_label_unknown = tgt_member[tgt_member > ncls-1]
+    tgt_member_new_unknown = tgt_member_new[tgt_member > ncls-1]
+    nmi_v = nmi(tgt_member_new, tgt_member)
+    #print('=====nmi========', nmi_v)#, tgt_member_new, tgt_member, tgt_member_new.shape, tgt_member.shape)
+    k_acc = np.sum(tar_label_known == tgt_member_new_known) / np.sum(tgt_member < ncls)
+    k_acc_total = {}
+    k_num_total = {}
+    k_pos_total = {}
+    for c in np.unique(tar_label_known):
+        tr = tar_label_known[tar_label_known==c]
+        es = tgt_member_new_known[tar_label_known==c]
+        pacc = np.sum(tr==es) / len(tr)
+        k_acc_total[c] = pacc
+        k_num_total[c] = len(tr)
+        k_pos_total[c] = np.sum(tr==es)
+
+    print(k_acc_total)
+    print(k_num_total)
+    print(k_pos_total)
+    known_acc = np.array(list(k_acc_total.values())).mean()
+    unknown_acc = np.sum(tgt_member_new_unknown > ncls-1) / len(tgt_member_new_unknown)
+    acc_total = {**k_acc_total, ncls: unknown_acc}
+    acc_test = np.round(np.mean(list(acc_total.values())), 3)
+    h_score = 2 * known_acc * unknown_acc / (known_acc + unknown_acc + 1e-5)
+    print('m_hos: {}; m_known:{}; m_unknown:{}'.format(h_score, known_acc, unknown_acc))
+    #print('known acc', k_acc)#, tar_label_known, tgt_member_new_known)
+    #len(tar_label_known), tar_label_known, tgt_member_new_known)
+    uk_nmi = nmi(tar_label_unknown, tgt_member_new_unknown)
+    print('m_nmi: {}; unknown m_nmi: {}; overall known m_acc: {}'.format(nmi_v, uk_nmi, k_acc))#, tar_label_unknown, tar_label_unknown, tgt_member_new_unknown)
+    #tgt_member_new_unknown, len(tar_label_unknown))
+    TP = np.sum((tgt_member > ncls-1) & (tgt_member_new > ncls-1))
+    TN = np.sum((tgt_member < ncls) & (tgt_member_new < ncls))
+    FP = np.sum((tgt_member < ncls) & (tgt_member_new > ncls-1))
+    FN = np.sum((tgt_member > ncls-1) & (tgt_member_new < ncls))
+    rec = TP / (TP + FN)
+    print('recall is ', rec, TP, TP + FN)
+    prec = TP / (TP + FP)
+    print('precision is', prec, TP, TP + FP)
+    return h_score, acc_test, nmi_v, k_acc, uk_nmi, rec, prec
+
 
 def merge_perf_pda(tgt_member, tgt_member_new):
     return np.sum(tgt_member == tgt_member_new) / len(tgt_member)
