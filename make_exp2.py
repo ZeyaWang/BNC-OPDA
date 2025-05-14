@@ -54,14 +54,14 @@ scs = ['cos']
 #clf = [False, True] # [False, True]
 clf = [True]
 #target_types = ['OPDA', 'OSDA']
-#target_types = ['OPDA']
-target_types = ['OSDA', 'OPDA']
+target_types = ['OPDA']
+#target_types = ['OSDA', 'OPDA']
 
 for target_type in target_types:
-    if target_type == 'OSDA':
-        balances = [0.01]
-    else:
-        balances = [0, 0.1]
+    # if target_type == 'OSDA':
+    #     balances = [0.01]
+    # else:
+    #     balances = [0, 0.1]
     for ds, st in source_target.items():
         if ds == 'office':
             #lrs = [0.01, 0.1]
