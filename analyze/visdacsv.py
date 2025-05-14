@@ -37,5 +37,12 @@ for f in os.listdir(fd):
             if src == 'train' and domain == 'OPDA':
                 print(f)
                 print(hos, acc_test, nmi)
-
+                res = pd.read_csv(ff, header=None).iloc[11].tolist()
+                if (res[1] < 1) and (res[1] > 0):
+                    hos, acc_test, nmi, k_acc, uk_nmi = res[1:6]
+                    epoch = None
+                else:
+                    hos, acc_test, nmi, k_acc, uk_nmi = res[2:7]
+                    epoch = int(res[1])
+                print(hos, acc_test, nmi)
 
