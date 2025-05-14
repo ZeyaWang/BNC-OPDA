@@ -29,6 +29,8 @@ for f in os.listdir(fd):
             epoch = int(res[1])
         if len(f2[:-4].split('_')) == 15:
             _, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf, bs = f2[:-4].split('_')
+        if len(f2[:-4].split('_')) == 16:
+            _, t, domain, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc, clf, bs = f2[:-4].split('_')
             #if domain == ttype:
                 # myd[(balance, lr, lr_scale, interval, lambdav, KK, cov, sc, clf, bs, max_k)].append(
                 #     [src, tar, hos, acc_test, nmi, k_acc, uk_nmi, epoch])
