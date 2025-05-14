@@ -12,6 +12,8 @@ dm3 = ['train', 'validation']
 parser = argparse.ArgumentParser(description='Process.')
 parser.add_argument('--ttype', type=str, help='ttype', default='OPDA')
 parser.add_argument('--fd', type=str, help='dir', default='..')
+parser.add_argument('--only', action='store_true')
+
 args = parser.parse_args()
 ttype = args.ttype
 
@@ -119,6 +121,8 @@ for k in myd:
         #
 
 ########################################################################################################################
+if args.only:
+    exit()
 epoch = [10]
 
 for i in epoch:
