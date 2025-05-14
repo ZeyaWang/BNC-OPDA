@@ -222,14 +222,13 @@ for i in epoch:
                 nmi_f_h = '& '.join(nmi[:13])
             if k == ('0.01', '0.01', '0.1', '1', '0.0', '5', '0.001', 'cos', 'True', '64', '100'):
                 if len(hos) > 8:
-                    hos_b = '& '.join(hos[13:])
-                    acc_b = '& '.join(acc[13:])
-                    nmi_b = '& '.join(nmi[13:])
+                    hos_f = '& '.join(hos[13:])
+                    acc_f = '& '.join(acc[13:])
+                    nmi_f = '& '.join(nmi[13:])
                 else:
-                    hos_b = '& '.join(hos[1:])
-                    acc_b = '& '.join(acc[1:])
-                    nmi_b = '& '.join(nmi[1:])
-            # print(hos)
+                    hos_f = '& '.join(hos[1:])
+                    acc_f = '& '.join(acc[1:])
+                    nmi_f = '& '.join(nmi[1:])
             # hos = '& '.join(hos)
             # acc = '& '.join(acc)
             # nmi = '& '.join(nmi)
