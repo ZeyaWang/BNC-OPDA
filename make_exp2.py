@@ -54,7 +54,7 @@ scs = ['cos']
 #clf = [False, True] # [False, True]
 clf = [True]
 #target_types = ['OPDA', 'OSDA']
-target_types = ['OPDA']
+target_types = ['OSDA']
 #target_types = ['OSDA', 'OPDA']
 
 for target_type in target_types:
