@@ -119,12 +119,17 @@ for k in myd:
         # print(acc)
         # print(nmi)
         #
-print(hos_b_h)
-print(hos_b)
-print(acc_b_h)
-print(acc_b)
-print(nmi_b_h)
-print(nmi_b)
+if ttype == 'OSDA':
+    print(hos_b)
+    print(acc_b)
+    print(nmi_b)
+else:
+    print(hos_b_h)
+    print(hos_b)
+    print(acc_b_h)
+    print(acc_b)
+    print(nmi_b_h)
+    print(nmi_b)
 ########################################################################################################################
 if args.only:
     exit()
