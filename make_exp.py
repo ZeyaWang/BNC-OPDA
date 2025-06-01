@@ -78,13 +78,13 @@ for max_k in max_ks:
                                                 for cl in clf:
                                                     for _ in range(nn):
                                                     #CUDA_VISIBLE_DEVICES=1,3,5,7
-                                                        # cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free_visda.py --total_epoch 10 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
-                                                        #        '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
-                                                        cmd = (
-                                                            'python /home/zwa281/UDA/BNC-OPDA/source_free_only.py --total_epoch 10 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
-                                                            '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(
-                                                            target_type, ds, src, tar, balance, lr, lr_scale, interval,
-                                                            lambdav, max_k, KK, cov, sc)
+                                                        cmd = ('python /home/zwa281/UDA/BNC-OPDA/source_free_visda.py --total_epoch 10 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                               '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(target_type, ds, src, tar, balance, lr, lr_scale, interval, lambdav, max_k, KK, cov, sc)
+                                                        # cmd = (
+                                                        #     'python /home/zwa281/UDA/BNC-OPDA/source_free_only.py --total_epoch 10 --target_type {} --dataset {} --source {} --target {} --balance {} --lr {} '
+                                                        #     '--lr_scale {} --iter_factor {} --lambdav {} --max_k {} --KK {} --covariance_prior {} --score {} ').format(
+                                                        #     target_type, ds, src, tar, balance, lr, lr_scale, interval,
+                                                        #     lambdav, max_k, KK, cov, sc)
                                                         if cl:
                                                             cmd += '--classifier \n'
                                                         else:
